@@ -165,12 +165,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ServiceJob\ServiceJob.csproj">
-      <Project>{7f90634f-86c2-40e6-8a12-036e04223939}</Project>
-      <Name>ServiceJob</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Control\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

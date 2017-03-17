@@ -13,7 +13,6 @@ using GeneralServiceHost.Common;
 using GeneralServiceHost.Manager;
 using GeneralServiceHost.Model;
 using Microsoft.Win32;
-using ServiceJob;
 
 namespace GeneralServiceHost.ViewModel
 {
