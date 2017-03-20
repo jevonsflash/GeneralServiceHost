@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GeneralServiceHost.View"
+        xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         DataContext="{Binding Source={StaticResource Locator}, Path=AddJobWindow}"
         mc:Ignorable="d"
         Title="AddJobWindow">
@@ -20,16 +21,36 @@
 
                 <Button Content="选择文件"
                         Command="{Binding UploadFileCommand}"></Button>
-                <ComboBox  Width="100"
-                           ItemsSource="{Binding JobTypes}"
-                           DisplayMemberPath="FullName"
-                           SelectedItem="{Binding JobType}"></ComboBox>
+
             </StackPanel>
         </GroupBox>
         <GroupBox Grid.Row="1"
                   Header="计划设置">
+            <StackPanel DataContext="{Binding ScheduleInfo ,Mode=TwoWay}">
+                <StackPanel>
+                    <Label Content="名称"></Label>
+                    <TextBox Text="{Binding Name ,Mode=TwoWay}"></TextBox>
+                </StackPanel>
+                <StackPanel>
+                    <Label Content="类型"></Label>
 
-            <TextBox TextWrapping="Wrap" Text="{Binding CmdOutput}"></TextBox>
+                    <ComboBox ItemsSource="{Binding Source={StaticResource ScheduleTypeDataSource}}"
+                              SelectedItem="{Binding Type ,Mode=TwoWay}"></ComboBox>
+                </StackPanel>
+                <StackPanel>
+                    <CheckBox Content="是否立即运行"
+                              IsChecked="{Binding IsToRunNow ,Mode=TwoWay}"></CheckBox>
+                </StackPanel>
+                <StackPanel>
+                    <controls:TimePicker SelectedTime="{Binding Time,Mode=TwoWay}"></controls:TimePicker>
+                    <DatePicker></DatePicker>
+                </StackPanel>
+                <StackPanel>
+                    <Label Content="其他值"></Label>
+
+                    <controls:NumericUpDown Value="{Binding Value,Mode=TwoWay}"></controls:NumericUpDown>
+                </StackPanel>
+            </StackPanel>
         </GroupBox>
         <StackPanel Grid.Row="2">
             <Button Content="执行"

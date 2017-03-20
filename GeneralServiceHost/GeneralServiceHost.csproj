@@ -101,10 +101,14 @@
     <Compile Include="Common\ConsoleManager.cs" />
     <Compile Include="Common\GeneralServiceRegistry.cs" />
     <Compile Include="Common\WindowWrapper.cs" />
+    <Compile Include="Control\SimpleKeyValueControl.xaml.cs">
+      <DependentUpon>SimpleKeyValueControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helper\FileHelper.cs" />
     <Compile Include="Manager\DataManager.cs" />
     <Compile Include="Model\JobInfo.cs" />
     <Compile Include="Model\ScheduleInfo.cs" />
+    <Compile Include="Model\ScheduleType.cs" />
     <Compile Include="ViewModel\AddJobWindowViewModel.cs" />
     <Compile Include="ViewModel\IndexPageViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
@@ -115,6 +119,10 @@
     <Compile Include="View\IndexPage.xaml.cs">
       <DependentUpon>IndexPage.xaml</DependentUpon>
     </Compile>
+    <Page Include="Control\SimpleKeyValueControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -127,6 +135,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Style\PageSkinDictionary.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="View\AddJobWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -164,9 +176,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Control\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

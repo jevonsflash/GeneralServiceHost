@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using FluentScheduler;
 using GeneralServiceHost.Common;
+using GeneralServiceHost.Helper;
+using GeneralServiceHost.Model;
 
 namespace GeneralServiceHost
 {
@@ -14,5 +18,20 @@ namespace GeneralServiceHost
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            Manager.DataManager.Current.JobInfos = new ObservableCollection<JobInfo>(JobManager.AllSchedules.Select(c => new JobInfo()
+            {
+                Name = c.Name,
+                NextRun = c.NextRun,
+                Disabled = c.Disabled
+            }));
+            var dir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Jobs");
+            var dir2 = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Output");
+            DirFileHelper.CreateDir(dir);
+            DirFileHelper.CreateDir(dir2);
+            
+            
+        }
     }
 }

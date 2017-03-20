@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using FluentScheduler;
+using GeneralServiceHost.Manager;
 using Schedule = FluentScheduler.Schedule;
 
 namespace GeneralServiceHost.View
@@ -26,6 +27,7 @@ namespace GeneralServiceHost.View
         public IndexPage()
         {
             InitializeComponent();
+            this.JobGrid.DataContext = DataManager.Current;
         }
 
 

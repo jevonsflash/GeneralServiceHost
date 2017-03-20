@@ -3,8 +3,9 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      DataContext="{Binding Source={StaticResource Locator},Path= IndexPage}"
       xmlns:local="clr-namespace:GeneralServiceHost.View"
-      DataContext="{Binding Source={StaticResource Locator} ,Path=IndexPage}"
+      xmlns:control="clr-namespace:GeneralServiceHost.Control"
       mc:Ignorable="d"
       d:DesignHeight="1080"
       d:DesignWidth="1920"
@@ -17,12 +18,14 @@
                 <RowDefinition Height="10*"></RowDefinition>
                 <RowDefinition Height="1*"></RowDefinition>
             </Grid.RowDefinitions>
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="1"
+                  x:Name="JobGrid">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="3*"></ColumnDefinition>
                     <ColumnDefinition Width="9*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <ListView ItemsSource="{Binding JobInfos}">
+                <ListView ItemsSource="{Binding JobInfos}"
+                          x:Name="JobList">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
@@ -30,11 +33,41 @@
                                     <ColumnDefinition></ColumnDefinition>
                                     <ColumnDefinition></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding Schedule.Name}"></TextBlock>
+                                <TextBlock Text="{Binding Name}"></TextBlock>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
+
                 </ListView>
+                <StackPanel Grid.Column="1"
+                            DataContext="{Binding ElementName=JobList,Path= SelectedItem}">
+                    <GroupBox Header="基本信息">
+                        <StackPanel Orientation="Horizontal"
+                                    DataContext="{Binding  ScheduleInfo}">
+                            <control:SimpleKeyValueControl KeyText="名称"
+                                                           ValueText="{Binding Name}"></control:SimpleKeyValueControl>
+                            <control:SimpleKeyValueControl KeyText="是否立即"
+                                                           ValueText="{Binding IsToRunNow}"></control:SimpleKeyValueControl>
+                            <control:SimpleKeyValueControl KeyText="计划种类"
+                                                           ValueText="{Binding Type}"></control:SimpleKeyValueControl>
+                            <Label Content="{Binding ScheduleInfo.Hour}"></Label>
+                            <Label Content="{Binding ScheduleInfo.Minute}"></Label>
+                            <control:SimpleKeyValueControl KeyText="其他值"
+                                                           ValueText="{Binding Value}"></control:SimpleKeyValueControl>
+                        </StackPanel>
+                    </GroupBox>
+                    <GroupBox Header="输出">
+                        <StackPanel>
+                            <ItemsControl ItemsSource="{Binding Logs}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Label Content="{Binding}"></Label>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </GroupBox>
+                </StackPanel>
             </Grid>
 
             <StackPanel Grid.Row="0"

@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using FluentScheduler;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GeneralServiceHost.Common;
+using GeneralServiceHost.Helper;
 using GeneralServiceHost.Manager;
 using GeneralServiceHost.Model;
 using Microsoft.Win32;
@@ -27,12 +30,27 @@ namespace GeneralServiceHost.ViewModel
             this._generalServiceRegistry = new GeneralServiceRegistry();
             this.SetCommand = new RelayCommand(SetAction);
             UploadFileCommand = new RelayCommand(UploadFileAction);
+            this.ScheduleInfo = new ScheduleInfo() { Name = "程序集选择完成后显示" };
+            this.PropertyChanged += AddJobWindowViewModel_PropertyChanged;
+        }
+
+        private void AddJobWindowViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(ScheduleInfo))
+            {
+
+            }
         }
 
         private void UploadFileAction()
         {
             ChoiceDLL();
-            Console.WriteLine("加载外部资源完成,指定定时器");
+            if (_asm != null)
+            {
+                this.ScheduleInfo.Name = _asm.GetName().Name;
+                MessageBox.Show("加载程序集完成");
+
+            }
 
         }
 
@@ -50,7 +68,14 @@ namespace GeneralServiceHost.ViewModel
 
         public ScheduleInfo ScheduleInfo
         {
-            get { return _scheduleInfo; }
+            get
+            {
+                if (_scheduleInfo == null)
+                {
+                    _scheduleInfo = new ScheduleInfo();
+                }
+                return _scheduleInfo;
+            }
             set
             {
                 _scheduleInfo = value;
@@ -65,7 +90,7 @@ namespace GeneralServiceHost.ViewModel
             var dialog = new OpenFileDialog()
             {
                 Filter = "EXE File|*.exe;",
-                InitialDirectory = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Service", "Jobs")
+                InitialDirectory = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Jobs")
             };
             if (dialog.ShowDialog() == true)
             {
@@ -80,42 +105,40 @@ namespace GeneralServiceHost.ViewModel
 
         public void run()
         {
-            var sch = new ScheduleInfo()
-            {
-                Name = _asm.ToString(),
-                Hour = 0,
-                Minute = 1,
-                Value = 10,
-                IsToRunNow = false,
-                Type = ScheduleType.Hour,
-            };
 
 
 
-            _generalServiceRegistry.TestGeneralService(sch, () =>
+
+            _generalServiceRegistry.TestGeneralService(ScheduleInfo, () =>
             {
                 CmdProcessor(_asm.Location, OutputAction, ErrorAction);
 
 
             });
 
-            _generalServiceRegistry.SetAndRegistryGeneralService(sch, () =>
+            _generalServiceRegistry.SetAndRegistryGeneralService(ScheduleInfo, () =>
            {
                CmdProcessor(_asm.Location, OutputAction, ErrorAction);
 
 
            });
             JobManager.Initialize(_generalServiceRegistry);
-            var schedule = JobManager.GetSchedule(sch.Name);
-            DataManager.Current.JobInfos.Add(new JobInfo()
+
+            var schedule = JobManager.GetSchedule(ScheduleInfo.Name);
+            if (schedule != null)
             {
-                Logs = new List<string>(),
-                Schedule = schedule
+                DataManager.Current.JobInfos.Add(new JobInfo()
+                {
+                    Name = schedule.Name,
+                    Disabled = schedule.Disabled,
+                    NextRun = schedule.NextRun,
+                    ScheduleInfo = ScheduleInfo
+                });
+                var dir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Output", _asm.GetName().Name + ".txt");
 
-            });
-
-            Console.WriteLine("指定定时器完成");
-
+                DirFileHelper.CreateFile(dir);
+                MessageBox.Show("成功添加");
+            }
 
         }
 
@@ -126,14 +149,12 @@ namespace GeneralServiceHost.ViewModel
 
         private void OutputAction(object sender, DataReceivedEventArgs arg2)
         {
-            // this.CmdOutput += arg2.Data;
-
             var process = sender as Process;
             if (process != null)
             {
                 var name = process.ProcessName;
-                var job = DataManager.Current.JobInfos.Where(c => c.Schedule.Name == name).FirstOrDefault();
-                job.Logs.Add(arg2.Data);
+                var dir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Output", name + ".txt");
+                DirFileHelper.AppendText(dir, "\n" + arg2.Data);
             }
         }
 

@@ -12,7 +12,6 @@ using GalaSoft.MvvmLight.Command;
 using GeneralServiceHost.Manager;
 using GeneralServiceHost.Model;
 using Microsoft.Win32;
-using ServiceJob;
 
 namespace GeneralServiceHost.ViewModel
 {
@@ -26,28 +25,15 @@ namespace GeneralServiceHost.ViewModel
 
         private void RefreshAction()
         {
-            this.JobInfos = new ObservableCollection<JobInfo>(DataManager.Current.JobInfos);
+            DataManager.Current.JobInfos = new ObservableCollection<JobInfo>(JobManager.AllSchedules.Select(c => new JobInfo()
+            {
+                Name = c.Name,
+                NextRun = c.NextRun,
+                Disabled = c.Disabled
+            }));
         }
 
-        private ObservableCollection<JobInfo> _jobInfos;
 
-        public ObservableCollection<JobInfo> JobInfos
-        {
-            get
-            {
-                if (_jobInfos == null || _jobInfos.Count == 0)
-                {
-                    this._jobInfos = new ObservableCollection<JobInfo>(DataManager.Current.JobInfos);
-                }
-                return _jobInfos;
-            }
-            set
-            {
-                _jobInfos = value;
-
-                RaisePropertyChanged(nameof(JobInfos));
-            }
-        }
 
         public RelayCommand RefreshCommand { get; set; }
 
