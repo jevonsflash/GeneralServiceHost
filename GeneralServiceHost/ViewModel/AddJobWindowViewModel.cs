@@ -8,9 +8,11 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Xml.Xsl;
 using FluentScheduler;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using GeneralServiceHost.Common;
 using GeneralServiceHost.Helper;
 using GeneralServiceHost.Manager;
@@ -22,7 +24,6 @@ namespace GeneralServiceHost.ViewModel
     public class AddJobWindowViewModel : ViewModelBase
     {
 
-        private Assembly _asm;
 
         private GeneralServiceRegistry _generalServiceRegistry;
         public AddJobWindowViewModel()
@@ -34,20 +35,27 @@ namespace GeneralServiceHost.ViewModel
             this.PropertyChanged += AddJobWindowViewModel_PropertyChanged;
         }
 
+
         private void AddJobWindowViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(ScheduleInfo))
+            if (e.PropertyName == nameof(Asm))
             {
+                if (Asm != null)
+                {
+                    this.ScheduleInfo.AsmPath = Asm.Location;
+                    this.ScheduleInfo.AsmName = Asm.GetName().Name;
 
+
+                }
             }
         }
 
         private void UploadFileAction()
         {
             ChoiceDLL();
-            if (_asm != null)
+            if (Asm != null)
             {
-                this.ScheduleInfo.Name = _asm.GetName().Name;
+                this.ScheduleInfo.Name = Asm.GetName().Name;
                 MessageBox.Show("加载程序集完成");
 
             }
@@ -61,6 +69,18 @@ namespace GeneralServiceHost.ViewModel
 
         public RelayCommand SetCommand { get; set; }
         public RelayCommand UploadFileCommand { get; set; }
+
+        private Assembly _asm;
+
+        public Assembly Asm
+        {
+            get { return _asm; }
+            set
+            {
+                _asm = value;
+                RaisePropertyChanged(nameof(Asm));
+            }
+        }
 
 
 
@@ -96,9 +116,7 @@ namespace GeneralServiceHost.ViewModel
             {
                 var exe = dialog.FileName;
 
-                _asm = Assembly.LoadFrom(exe);
-
-
+                Asm = Assembly.LoadFrom(exe);
 
             }
         }
@@ -106,81 +124,104 @@ namespace GeneralServiceHost.ViewModel
         public void run()
         {
 
-
-
-
-            _generalServiceRegistry.TestGeneralService(ScheduleInfo, () =>
+            if (DataManager.Current.JobInfos.Where(c => c.Name == ScheduleInfo.Name).Any())
             {
-                CmdProcessor(_asm.Location, OutputAction, ErrorAction);
+                MessageBox.Show(string.Format("已经包含名称为{0}的Job", ScheduleInfo.Name));
+
+                return;
+            }
+
+            if (ScheduleInfo.IsGeneralJob)
+            {
+                _generalServiceRegistry.SetAndRegistryGeneralService(ScheduleInfo, (sch) =>
+              {
+                  CmdProcessor(sch, OutputAction, ErrorAction);
 
 
-            });
+              });
 
-            _generalServiceRegistry.SetAndRegistryGeneralService(ScheduleInfo, () =>
-           {
-               CmdProcessor(_asm.Location, OutputAction, ErrorAction);
+            }
+            else
+            {
+                _generalServiceRegistry.SetAndRegistryDelayService(ScheduleInfo, (sch) =>
+               {
+                   CmdProcessor(sch, OutputAction, ErrorAction);
 
 
-           });
+               });
+
+            }
+
             JobManager.Initialize(_generalServiceRegistry);
 
             var schedule = JobManager.GetSchedule(ScheduleInfo.Name);
             if (schedule != null)
             {
-                DataManager.Current.JobInfos.Add(new JobInfo()
+
+                var jobInfo = new JobInfo()
                 {
                     Name = schedule.Name,
                     Disabled = schedule.Disabled,
                     NextRun = schedule.NextRun,
                     ScheduleInfo = ScheduleInfo
-                });
-                var dir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Output", _asm.GetName().Name + ".txt");
 
+                };
+                DataManager.Current.JobInfos.Add(jobInfo);
+                var dir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Output", Asm.GetName().Name + ".txt");
                 DirFileHelper.CreateFile(dir);
                 MessageBox.Show("成功添加");
             }
 
         }
 
-        private void ErrorAction(object arg1, DataReceivedEventArgs arg2)
+        private void ErrorAction(object arg1, OutputArgs arg2)
         {
-            //throw new NotImplementedException();
+
         }
 
-        private void OutputAction(object sender, DataReceivedEventArgs arg2)
+        private void OutputAction(object sender, OutputArgs arg2)
         {
+
             var process = sender as Process;
             if (process != null)
             {
-                var name = process.ProcessName;
+                var name = process.StartInfo.Arguments;
+                var content = arg2.OutputContent;
                 var dir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Output", name + ".txt");
-                DirFileHelper.AppendText(dir, "\n" + arg2.Data);
+                var log = DataManager.Current.JobInfos.FirstOrDefault(c => c.Name == arg2.JobName).SbLog;
+                log.AppendLine(content);
+                //Messenger.Default.Send(new MessageBase(this));
+                //DirFileHelper.AppendText(dir, "\r\n" + content);
+
             }
         }
 
-        public void CmdProcessor(string file, Action<object, DataReceivedEventArgs> outputDataReceivedAction, Action<object, DataReceivedEventArgs> errorDataReceivedAction)
+        public void CmdProcessor(ScheduleInfo scheduleInfo, Action<object, OutputArgs> outputDataReceivedAction, Action<object, OutputArgs> errorDataReceivedAction)
         {
             var p = new Process()
             {
                 StartInfo =
                 {
 
-                    FileName = file,
+                    FileName = scheduleInfo.AsmPath,
                     UseShellExecute = false,
                     RedirectStandardOutput = true,
                     CreateNoWindow = true,
-
+                    Arguments = scheduleInfo.Name
 
                 }
             };
+
             p.Start();
             p.OutputDataReceived += (e, o) =>
             {
-                outputDataReceivedAction(e, o);
+                var arg = new OutputArgs(o.Data, scheduleInfo.Name);
+                outputDataReceivedAction(e, arg);
             };
             p.ErrorDataReceived += (e, o) =>
             {
-                errorDataReceivedAction(e, o);
+                var arg = new OutputArgs(o.Data, scheduleInfo.Name);
+                errorDataReceivedAction(e, arg);
             };
 
             //当EnableRaisingEvents为true，进程退出时Process会调用下面的委托函数

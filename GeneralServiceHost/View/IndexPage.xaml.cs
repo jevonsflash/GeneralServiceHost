@@ -27,14 +27,14 @@ namespace GeneralServiceHost.View
         public IndexPage()
         {
             InitializeComponent();
-            this.JobGrid.DataContext = DataManager.Current;
+            this.JobList.ItemsSource = DataManager.Current.JobInfos;
         }
 
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             var addJobWindow = new AddJobWindow();
-            addJobWindow.Show();
+            addJobWindow.ShowDialog();
         }
     }
 }

@@ -24,47 +24,80 @@
                     <ColumnDefinition Width="3*"></ColumnDefinition>
                     <ColumnDefinition Width="9*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <ListView ItemsSource="{Binding JobInfos}"
+                <ListView SelectedItem="{Binding SelectedJobInfo}"
                           x:Name="JobList">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition></RowDefinition>
+                                    <RowDefinition></RowDefinition>
+                                </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition></ColumnDefinition>
+                                    <ColumnDefinition Width="15"></ColumnDefinition>
                                     <ColumnDefinition></ColumnDefinition>
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding Name}"></TextBlock>
+
+                                <Rectangle Grid.Column="0"
+                                           Grid.RowSpan="2"
+                                           Fill="Red"
+                                           Visibility="{Binding Disabled,Converter={StaticResource Bool2VisibilityConverter},ConverterParameter=true}">
+
+                                </Rectangle>
+                                <Rectangle Grid.Column="0"
+                                           Grid.RowSpan="2"
+                                           Fill="Green"
+                                           Visibility="{Binding Disabled,Converter={StaticResource Bool2VisibilityConverter},ConverterParameter=false}">
+
+                                </Rectangle>
+                                <Rectangle Grid.Column="0"
+                                           Grid.RowSpan="2"
+                                           Fill="Gray"
+                                           Visibility="{Binding Obsolete,Converter={StaticResource Bool2VisibilityConverter},ConverterParameter=true}">
+
+                                </Rectangle>
+
+                                <StackPanel Grid.RowSpan="2"
+                                            Grid.Column="1">
+                                    <TextBlock Text="{Binding Name}"
+                                               FontSize="{StaticResource LargeFontSize}"></TextBlock>
+
+                                    <control:SimpleKeyValueControl KeyText="下次执行时间"
+                                                                   ValueText="{Binding NextRun}"></control:SimpleKeyValueControl>
+
+                                </StackPanel>
                             </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
 
                 </ListView>
                 <StackPanel Grid.Column="1"
-                            DataContext="{Binding ElementName=JobList,Path= SelectedItem}">
+                            DataContext="{Binding SelectedJobInfo}">
                     <GroupBox Header="基本信息">
-                        <StackPanel Orientation="Horizontal"
-                                    DataContext="{Binding  ScheduleInfo}">
+                        <WrapPanel Orientation="Horizontal">
+
                             <control:SimpleKeyValueControl KeyText="名称"
-                                                           ValueText="{Binding Name}"></control:SimpleKeyValueControl>
+                                                           ValueText="{Binding ScheduleInfo.Name}"></control:SimpleKeyValueControl>
+                            <control:SimpleKeyValueControl KeyText="程序集名称"
+                                                           ValueText="{Binding ScheduleInfo.AsmName}"></control:SimpleKeyValueControl>
+                            <control:SimpleKeyValueControl KeyText="类型"
+                                                           ValueText="{Binding ScheduleInfo.IsGeneralJob ,Converter={StaticResource Bool2StringConverter},ConverterParameter=周期运行|延时运行}"></control:SimpleKeyValueControl>
                             <control:SimpleKeyValueControl KeyText="是否立即"
-                                                           ValueText="{Binding IsToRunNow}"></control:SimpleKeyValueControl>
-                            <control:SimpleKeyValueControl KeyText="计划种类"
-                                                           ValueText="{Binding Type}"></control:SimpleKeyValueControl>
-                            <Label Content="{Binding ScheduleInfo.Hour}"></Label>
-                            <Label Content="{Binding ScheduleInfo.Minute}"></Label>
+                                                           ValueText="{Binding ScheduleInfo.IsToRunNow,Converter={StaticResource Bool2StringConverter}}"></control:SimpleKeyValueControl>
+                            <control:SimpleKeyValueControl KeyText="时间单位"
+                                                           ValueText="{Binding ScheduleInfo.Type}"></control:SimpleKeyValueControl>
+                            <control:SimpleKeyValueControl KeyText="小时值"
+                                                           ValueText="{Binding ScheduleInfo.Hour}"></control:SimpleKeyValueControl>
+                            <control:SimpleKeyValueControl KeyText="分钟值"
+                                                           ValueText="{Binding ScheduleInfo.Minute}"></control:SimpleKeyValueControl>
                             <control:SimpleKeyValueControl KeyText="其他值"
-                                                           ValueText="{Binding Value}"></control:SimpleKeyValueControl>
-                        </StackPanel>
+                                                           ValueText="{Binding ScheduleInfo.Value}"></control:SimpleKeyValueControl>
+                        </WrapPanel>
                     </GroupBox>
                     <GroupBox Header="输出">
                         <StackPanel>
-                            <ItemsControl ItemsSource="{Binding Logs}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Label Content="{Binding}"></Label>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                            <TextBlock TextWrapping="Wrap"
+                                       Text="{Binding SbLog}"></TextBlock>
                         </StackPanel>
                     </GroupBox>
                 </StackPanel>
@@ -85,10 +118,11 @@
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">
                 <Button Content="开始"
+                        Command="{Binding StartCommand}"
                         Width="150"></Button>
-                <Button Content="暂停"
-                        Width="150"></Button>
+
                 <Button Content="终止"
+                        Command="{Binding AbortCommand}"
                         Width="150"></Button>
             </StackPanel>
 

@@ -100,10 +100,13 @@
     </ApplicationDefinition>
     <Compile Include="Common\ConsoleManager.cs" />
     <Compile Include="Common\GeneralServiceRegistry.cs" />
+    <Compile Include="Common\OutputArgs.cs" />
     <Compile Include="Common\WindowWrapper.cs" />
     <Compile Include="Control\SimpleKeyValueControl.xaml.cs">
       <DependentUpon>SimpleKeyValueControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converter\Bool2StringConverter.cs" />
+    <Compile Include="Converter\Bool2VisibilityConverter.cs" />
     <Compile Include="Helper\FileHelper.cs" />
     <Compile Include="Manager\DataManager.cs" />
     <Compile Include="Model\JobInfo.cs" />

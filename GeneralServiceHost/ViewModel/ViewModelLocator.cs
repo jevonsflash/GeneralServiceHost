@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
@@ -23,7 +24,7 @@ namespace GeneralServiceHost.ViewModel
 
         public static void Cleanup()
         {
-            // TODO Clear the ViewModels
+            
         }
     }
 }

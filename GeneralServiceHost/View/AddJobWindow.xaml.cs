@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using GeneralServiceHost.ViewModel;
 
 namespace GeneralServiceHost.View
 {
@@ -22,6 +23,8 @@ namespace GeneralServiceHost.View
         public AddJobWindow()
         {
             InitializeComponent();
+            this.DataContext=new AddJobWindowViewModel();
         }
+
     }
 }

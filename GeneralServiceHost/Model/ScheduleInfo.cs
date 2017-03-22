@@ -9,6 +9,11 @@ namespace GeneralServiceHost.Model
 {
     public class ScheduleInfo : ViewModelBase
     {
+
+        public ScheduleInfo()
+        {
+            this.IsGeneralJob = true;
+        }
         private string _name;
 
         public string Name
@@ -76,6 +81,44 @@ namespace GeneralServiceHost.Model
                 RaisePropertyChanged(nameof(Value));
             }
         }
+
+        private bool _isGeneralJob;
+        public bool IsGeneralJob
+        {
+            get
+            {
+                return _isGeneralJob;
+
+            }
+            set
+            {
+                _isGeneralJob = value;
+                RaisePropertyChanged(nameof(IsGeneralJob));
+            }
+        }
+
+        private string _asmPath;
+
+        public string AsmPath
+        {
+            get { return _asmPath; }
+            set
+            {
+                _asmPath = value;
+                RaisePropertyChanged(nameof(AsmPath));
+            }
+        }
+        private string _asmName;
+        public string AsmName
+        {
+            get { return _asmName; }
+            set
+            {
+                _asmName = value;
+                RaisePropertyChanged(nameof(AsmName));
+            }
+        }
+
     }
 
 

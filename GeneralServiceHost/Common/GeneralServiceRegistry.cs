@@ -17,26 +17,27 @@ namespace GeneralServiceHost.Common
         public GeneralServiceRegistry()
         {
 
-
+            NonReentrantAsDefault();
         }
 
         public void SetAndRegistryGeneralService<T>(ScheduleInfo scheduleInfo) where T : IJob
         {
+
             if (scheduleInfo.IsToRunNow)
             {
                 switch (scheduleInfo.Type)
                 {
                     case ScheduleType.Day:
-                        Schedule<T>().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Days().At(scheduleInfo.Hour, scheduleInfo.Minute);
+                        Schedule<T>().NonReentrant().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Days().At(scheduleInfo.Hour, scheduleInfo.Minute);
                         break;
                     case ScheduleType.Hour:
-                        Schedule<T>().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Hours().At(scheduleInfo.Minute);
+                        Schedule<T>().NonReentrant().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Hours().At(scheduleInfo.Minute);
                         break;
                     case ScheduleType.Week:
-                        Schedule<T>().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Weeks().On(CastDayOfWeek(scheduleInfo.Value)).At(scheduleInfo.Hour, scheduleInfo.Minute);
+                        Schedule<T>().NonReentrant().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Weeks().On(CastDayOfWeek(scheduleInfo.Value)).At(scheduleInfo.Hour, scheduleInfo.Minute);
                         break;
                     case ScheduleType.Month:
-                        Schedule<T>().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Months().On(scheduleInfo.Value).At(scheduleInfo.Hour, scheduleInfo.Minute);
+                        Schedule<T>().NonReentrant().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Months().On(scheduleInfo.Value).At(scheduleInfo.Hour, scheduleInfo.Minute);
                         break;
                     default:
                         break;
@@ -47,16 +48,16 @@ namespace GeneralServiceHost.Common
                 switch (scheduleInfo.Type)
                 {
                     case ScheduleType.Day:
-                        Schedule<T>().WithName(scheduleInfo.Name).ToRunEvery(1).Days().At(scheduleInfo.Hour, scheduleInfo.Minute);
+                        Schedule<T>().NonReentrant().WithName(scheduleInfo.Name).ToRunEvery(1).Days().At(scheduleInfo.Hour, scheduleInfo.Minute);
                         break;
                     case ScheduleType.Hour:
-                        Schedule<T>().WithName(scheduleInfo.Name).ToRunEvery(1).Hours().At(scheduleInfo.Minute);
+                        Schedule<T>().NonReentrant().WithName(scheduleInfo.Name).ToRunEvery(1).Hours().At(scheduleInfo.Minute);
                         break;
                     case ScheduleType.Week:
-                        Schedule<T>().WithName(scheduleInfo.Name).ToRunEvery(1).Weeks().On(CastDayOfWeek(scheduleInfo.Value)).At(scheduleInfo.Hour, scheduleInfo.Minute);
+                        Schedule<T>().NonReentrant().WithName(scheduleInfo.Name).ToRunEvery(1).Weeks().On(CastDayOfWeek(scheduleInfo.Value)).At(scheduleInfo.Hour, scheduleInfo.Minute);
                         break;
                     case ScheduleType.Month:
-                        Schedule<T>().WithName(scheduleInfo.Name).ToRunEvery(1).Months().On(scheduleInfo.Value).At(scheduleInfo.Hour, scheduleInfo.Minute);
+                        Schedule<T>().NonReentrant().WithName(scheduleInfo.Name).ToRunEvery(1).Months().On(scheduleInfo.Value).At(scheduleInfo.Hour, scheduleInfo.Minute);
                         break;
                     default:
                         break;
@@ -65,30 +66,58 @@ namespace GeneralServiceHost.Common
             }
         }
 
-        public void TestGeneralService(ScheduleInfo scheduleInfo, Action action)
+        public void SetAndRegistryDelayService(ScheduleInfo scheduleInfo, Action<ScheduleInfo> action)
         {
 
-            Schedule(action).WithName("Test").ToRunOnceIn(scheduleInfo.Value).Seconds();
+            switch (scheduleInfo.Type)
+            {
+
+                case ScheduleType.Minute:
+                    Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunOnceIn(scheduleInfo.Value).Minutes();
+                    break;
+                case ScheduleType.Day:
+                    Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunOnceIn(scheduleInfo.Value).Days();
+
+                    break;
+                case ScheduleType.Hour:
+                    Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunOnceIn(scheduleInfo.Value).Hours();
+
+                    break;
+                case ScheduleType.Week:
+                    Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunOnceIn(scheduleInfo.Value).Weeks();
+
+                    break;
+                case ScheduleType.Month:
+                    Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunOnceIn(scheduleInfo.Value).Months();
+
+                    break;
+                default:
+                    break;
+            }
 
         }
 
-        public void SetAndRegistryGeneralService(ScheduleInfo scheduleInfo, Action action)
+        public void SetAndRegistryGeneralService(ScheduleInfo scheduleInfo, Action<ScheduleInfo> action)
         {
+
             if (scheduleInfo.IsToRunNow)
             {
                 switch (scheduleInfo.Type)
                 {
+                    case ScheduleType.Minute:
+                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Minutes();
+                        break;
                     case ScheduleType.Day:
-                        Schedule(action).WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Days().At(scheduleInfo.Hour, scheduleInfo.Minute);
+                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Days().At(scheduleInfo.Hour, scheduleInfo.Minute);
                         break;
                     case ScheduleType.Hour:
-                        Schedule(action).WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Hours().At(scheduleInfo.Minute);
+                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Hours().At(scheduleInfo.Minute);
                         break;
                     case ScheduleType.Week:
-                        Schedule(action).WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Weeks().On(CastDayOfWeek(scheduleInfo.Value)).At(scheduleInfo.Hour, scheduleInfo.Minute);
+                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Weeks().On(CastDayOfWeek(scheduleInfo.Value)).At(scheduleInfo.Hour, scheduleInfo.Minute);
                         break;
                     case ScheduleType.Month:
-                        Schedule(action).WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Months().On(scheduleInfo.Value).At(scheduleInfo.Hour, scheduleInfo.Minute);
+                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Months().On(scheduleInfo.Value).At(scheduleInfo.Hour, scheduleInfo.Minute);
                         break;
                     default:
                         break;
@@ -99,22 +128,30 @@ namespace GeneralServiceHost.Common
                 switch (scheduleInfo.Type)
                 {
                     case ScheduleType.Day:
-                        Schedule(action).WithName(scheduleInfo.Name).ToRunEvery(1).Days().At(scheduleInfo.Hour, scheduleInfo.Minute);
+                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunEvery(1).Days().At(scheduleInfo.Hour, scheduleInfo.Minute);
                         break;
                     case ScheduleType.Hour:
-                        Schedule(action).WithName(scheduleInfo.Name).ToRunEvery(1).Hours().At(scheduleInfo.Minute);
+                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunEvery(1).Hours().At(scheduleInfo.Minute);
                         break;
                     case ScheduleType.Week:
-                        Schedule(action).WithName(scheduleInfo.Name).ToRunEvery(1).Weeks().On(CastDayOfWeek(scheduleInfo.Value)).At(scheduleInfo.Hour, scheduleInfo.Minute);
+                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunEvery(1).Weeks().On(CastDayOfWeek(scheduleInfo.Value)).At(scheduleInfo.Hour, scheduleInfo.Minute);
                         break;
                     case ScheduleType.Month:
-                        Schedule(action).WithName(scheduleInfo.Name).ToRunEvery(1).Months().On(scheduleInfo.Value).At(scheduleInfo.Hour, scheduleInfo.Minute);
+                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunEvery(1).Months().On(scheduleInfo.Value).At(scheduleInfo.Hour, scheduleInfo.Minute);
                         break;
                     default:
                         break;
                 }
 
             }
+        }
+
+        private static Action Job(ScheduleInfo scheduleInfo, Action<ScheduleInfo> action)
+        {
+            return () =>
+            {
+                action(scheduleInfo);
+            };
         }
 
 
@@ -152,5 +189,6 @@ namespace GeneralServiceHost.Common
 
 
     }
+
 
 }

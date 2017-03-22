@@ -8,6 +8,7 @@ namespace GeneralServiceHost.Model
 {
     public enum ScheduleType
     {
-        Hour, Day, Month, Week
+        Hour, Day, Month, Week,
+        Minute
     }
 }

@@ -6,9 +6,12 @@
              d1p1:Ignorable="d"
              xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
-             xmlns:model="clr-namespace:GeneralServiceHost.Model">
+             xmlns:model="clr-namespace:GeneralServiceHost.Model"
+             xmlns:converter1="clr-namespace:GeneralServiceHost.Converter">
     <Application.Resources>
         <ResourceDictionary>
+            <converter1:Bool2VisibilityConverter x:Key="Bool2VisibilityConverter"></converter1:Bool2VisibilityConverter>
+            <converter1:Bool2StringConverter x:Key="Bool2StringConverter"></converter1:Bool2StringConverter>
 
             <system:Double x:Key="LargeFontSize">32</system:Double>
 

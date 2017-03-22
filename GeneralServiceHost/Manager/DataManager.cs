@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,6 +12,16 @@ namespace GeneralServiceHost.Manager
 {
     public class DataManager : ViewModelBase
     {
+        public DataManager()
+        {
+            JobInfos.CollectionChanged += JobInfos_CollectionChanged;
+        }
+
+        private void JobInfos_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            var aa = e.NewItems;
+        }
+
         private static DataManager _current;
 
         public static DataManager Current
@@ -46,6 +57,7 @@ namespace GeneralServiceHost.Manager
                 base.RaisePropertyChanged(nameof(JobInfos));
             }
         }
+
 
     }
 }

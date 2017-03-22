@@ -5,9 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GeneralServiceHost.View"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-        DataContext="{Binding Source={StaticResource Locator}, Path=AddJobWindow}"
         mc:Ignorable="d"
-        Title="AddJobWindow">
+        Title="AddJobWindow"
+        Width="420"
+        Height="580">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -17,38 +18,50 @@
         <GroupBox Grid.Row="0"
                   Header="程序集选择">
 
-            <StackPanel Orientation="Horizontal">
-
-                <Button Content="选择文件"
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="80"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" Height="45"
+                        Content="选择文件"
                         Command="{Binding UploadFileCommand}"></Button>
+                <TextBlock Grid.Column="1"
+                           Text="{Binding ScheduleInfo.AsmPath}"
+                           TextWrapping="WrapWithOverflow"></TextBlock>
 
-            </StackPanel>
+            </Grid>
         </GroupBox>
         <GroupBox Grid.Row="1"
                   Header="计划设置">
-            <StackPanel DataContext="{Binding ScheduleInfo ,Mode=TwoWay}">
+            <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <RadioButton Content="周期任务"
+                                 GroupName="1"
+                                 IsChecked="{Binding ScheduleInfo.IsGeneralJob,Mode=TwoWay}" />
+                    <RadioButton Content="延时任务"
+                                 GroupName="1" />
+                </StackPanel>
                 <StackPanel>
                     <Label Content="名称"></Label>
-                    <TextBox Text="{Binding Name ,Mode=TwoWay}"></TextBox>
+                    <TextBox Text="{Binding ScheduleInfo.Name ,Mode=TwoWay}"></TextBox>
+                </StackPanel>
+                <StackPanel Visibility="{Binding   ScheduleInfo.IsGeneralJob ,Converter={StaticResource Bool2VisibilityConverter}}">
+                    <Label Content="时间参数"></Label>
+                    <controls:TimePicker SelectedTime="{Binding ScheduleInfo.Time,Mode=TwoWay}"></controls:TimePicker>
                 </StackPanel>
                 <StackPanel>
-                    <Label Content="类型"></Label>
-
+                    <Label Content="时间单位"></Label>
                     <ComboBox ItemsSource="{Binding Source={StaticResource ScheduleTypeDataSource}}"
-                              SelectedItem="{Binding Type ,Mode=TwoWay}"></ComboBox>
-                </StackPanel>
-                <StackPanel>
-                    <CheckBox Content="是否立即运行"
-                              IsChecked="{Binding IsToRunNow ,Mode=TwoWay}"></CheckBox>
-                </StackPanel>
-                <StackPanel>
-                    <controls:TimePicker SelectedTime="{Binding Time,Mode=TwoWay}"></controls:TimePicker>
-                    <DatePicker></DatePicker>
+                              SelectedItem="{Binding ScheduleInfo.Type ,Mode=TwoWay}"></ComboBox>
                 </StackPanel>
                 <StackPanel>
                     <Label Content="其他值"></Label>
-
-                    <controls:NumericUpDown Value="{Binding Value,Mode=TwoWay}"></controls:NumericUpDown>
+                    <controls:NumericUpDown Value="{Binding ScheduleInfo.Value,Mode=TwoWay}"></controls:NumericUpDown>
+                </StackPanel>
+                <StackPanel Visibility="{Binding   ScheduleInfo.IsGeneralJob ,Converter={StaticResource Bool2VisibilityConverter}}">
+                    <CheckBox Content="是否立即运行"
+                              IsChecked="{Binding ScheduleInfo.IsToRunNow ,Mode=TwoWay}"></CheckBox>
                 </StackPanel>
             </StackPanel>
         </GroupBox>

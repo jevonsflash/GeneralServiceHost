@@ -11,18 +11,19 @@ namespace ServiceJob
     {
         public static void Main()
         {
-            Console.WriteLine("Hellow World");
-            Thread.Sleep(5000);
-            Console.WriteLine("this is a test console app");
-            Thread.Sleep(2000);
+            //Console.WriteLine("Hellow World");
+            //Thread.Sleep(5000);
+            //Console.WriteLine("this is a test console app");
+            //Thread.Sleep(2000);
 
-            Console.WriteLine("I can read your mind");
-            Thread.Sleep(2000);
+            //Console.WriteLine("I can read your mind");
+            //Thread.Sleep(2000);
 
-            Console.WriteLine("do you belive it?");
+            //Console.WriteLine("do you belive it?");
+            Console.WriteLine("now is{0}", DateTime.Now);
+            Thread.Sleep(1000);
 
-
-            Console.ReadLine();
+            //Console.ReadLine();
 
 
         }

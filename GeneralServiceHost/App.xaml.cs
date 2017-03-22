@@ -20,12 +20,7 @@ namespace GeneralServiceHost
     {
         public App()
         {
-            Manager.DataManager.Current.JobInfos = new ObservableCollection<JobInfo>(JobManager.AllSchedules.Select(c => new JobInfo()
-            {
-                Name = c.Name,
-                NextRun = c.NextRun,
-                Disabled = c.Disabled
-            }));
+
             var dir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Jobs");
             var dir2 = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Output");
             DirFileHelper.CreateDir(dir);
