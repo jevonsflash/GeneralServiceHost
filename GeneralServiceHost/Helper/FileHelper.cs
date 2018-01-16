@@ -253,7 +253,7 @@ namespace GeneralServiceHost.Helper
             dir = dir.Replace("/", "\\");
             if (dir.IndexOf("\\") > -1)
                 CreateDir(dir.Substring(0, dir.LastIndexOf("\\")));
-            System.IO.StreamWriter sw = new System.IO.StreamWriter(dir, false, System.Text.Encoding.GetEncoding("GB2312"));
+            System.IO.StreamWriter sw = new System.IO.StreamWriter(dir, false, System.Text.Encoding.GetEncoding("UTF-8"));
             sw.Write(pagestr);
             sw.Close();
         }

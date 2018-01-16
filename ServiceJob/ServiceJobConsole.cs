@@ -20,8 +20,20 @@ namespace ServiceJob
             //Thread.Sleep(2000);
 
             //Console.WriteLine("do you belive it?");
-            Console.WriteLine("now is{0}", DateTime.Now);
-            Thread.Sleep(1000);
+            var n = 10;
+            var a = 5;
+            var b = 0;
+            while (n > 0)
+            {
+                Console.WriteLine("I can read your mind, do you belive it?");
+                Console.WriteLine("now is{0}", DateTime.Now);
+                Thread.Sleep(1000);
+                n--;
+            }
+
+            Console.WriteLine("about to exit!");
+            var c =  a / b;
+            //Thread.Sleep(1000);
 
             //Console.ReadLine();
 

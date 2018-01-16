@@ -80,7 +80,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _sbLog = value;
-                RaisePropertyChanged(nameof(NextRun));
+                RaisePropertyChanged(nameof(SbLog));
             }
         }
 

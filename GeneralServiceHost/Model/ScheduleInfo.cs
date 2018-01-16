@@ -13,6 +13,7 @@ namespace GeneralServiceHost.Model
         public ScheduleInfo()
         {
             this.IsGeneralJob = true;
+            this.IsGuard = false;
         }
         private string _name;
 
@@ -94,6 +95,21 @@ namespace GeneralServiceHost.Model
             {
                 _isGeneralJob = value;
                 RaisePropertyChanged(nameof(IsGeneralJob));
+            }
+        }
+
+        private bool _isGuard;
+        public bool IsGuard
+        {
+            get
+            {
+                return _isGuard;
+
+            }
+            set
+            {
+                _isGuard = value;
+                RaisePropertyChanged(nameof(IsGuard));
             }
         }
 

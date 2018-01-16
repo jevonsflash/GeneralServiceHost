@@ -24,7 +24,8 @@
                     <ColumnDefinition Width="3*"></ColumnDefinition>
                     <ColumnDefinition Width="9*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <ListView SelectedItem="{Binding SelectedJobInfo}"
+                <ListView SelectedItem="{Binding SelectedJobInfo}"     
+                          ItemsSource="{Binding Source={StaticResource  DataManager }, Path=Current.JobInfos}"
                           x:Name="JobList">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -95,10 +96,10 @@
                         </WrapPanel>
                     </GroupBox>
                     <GroupBox Header="输出">
-                        <StackPanel>
+                        <ScrollViewer>
                             <TextBlock TextWrapping="Wrap"
                                        Text="{Binding SbLog}"></TextBlock>
-                        </StackPanel>
+                        </ScrollViewer>
                     </GroupBox>
                 </StackPanel>
             </Grid>

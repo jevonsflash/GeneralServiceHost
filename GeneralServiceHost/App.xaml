@@ -7,7 +7,8 @@
              xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:system="clr-namespace:System;assembly=mscorlib"
              xmlns:model="clr-namespace:GeneralServiceHost.Model"
-             xmlns:converter1="clr-namespace:GeneralServiceHost.Converter">
+             xmlns:converter1="clr-namespace:GeneralServiceHost.Converter"
+             xmlns:manager="clr-namespace:GeneralServiceHost.Manager">
     <Application.Resources>
         <ResourceDictionary>
             <converter1:Bool2VisibilityConverter x:Key="Bool2VisibilityConverter"></converter1:Bool2VisibilityConverter>
@@ -21,7 +22,9 @@
             <vm:ViewModelLocator x:Key="Locator"
                                  d:IsDataSource="True"
                                  xmlns:vm="clr-namespace:GeneralServiceHost.ViewModel" />
-
+            <manager:DataManager x:Key="DataManager"
+                                 d:IsDataSource="True"
+                                  />
             <ObjectDataProvider x:Key="ScheduleTypeDataSource"
                                 MethodName="GetValues"
                                 ObjectType="{x:Type system:Enum}">

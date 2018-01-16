@@ -27,7 +27,6 @@ namespace GeneralServiceHost.View
         public IndexPage()
         {
             InitializeComponent();
-            this.JobList.ItemsSource = DataManager.Current.JobInfos;
         }
 
 

@@ -63,6 +63,10 @@
                     <CheckBox Content="是否立即运行"
                               IsChecked="{Binding ScheduleInfo.IsToRunNow ,Mode=TwoWay}"></CheckBox>
                 </StackPanel>
+                <StackPanel>
+                    <CheckBox Content="是否守护进程（失败后重启）"
+                              IsChecked="{Binding ScheduleInfo.IsGuard ,Mode=TwoWay}"></CheckBox>
+                </StackPanel>
             </StackPanel>
         </GroupBox>
         <StackPanel Grid.Row="2">

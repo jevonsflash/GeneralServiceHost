@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -22,34 +23,29 @@ namespace GeneralServiceHost.ViewModel
     {
         public IndexPageViewModel()
         {
-            JobManager.JobEnd += JobManager_JobEnd;
             this.RefreshCommand = new RelayCommand(RefreshAction);
             this.StartCommand = new RelayCommand<string>(StartAction);
             this.AbortCommand = new RelayCommand<string>(AbortAction);
-
+            DataManager.Current.ReadFinishedEvent += Current_ReadFinishedEvent;
+            DataManager.Current.Read();
+            
         }
 
-        private void JobManager_JobEnd(JobEndInfo obj)
+        private void Current_ReadFinishedEvent(object sender, EventArgs e)
         {
+            JobInfoManager.Refresh();
+        }
 
-            var job = DataManager.Current.JobInfos.First(c => c.Name == obj.Name);
-            if (job != null)
-            {
-                job.Obsolete = true;
-            }
-
+        private void RefreshAction()
+        {
+            JobInfoManager.Refresh();
         }
 
         private void AbortAction(string name)
         {
             if (this.SelectedJobInfo != null)
             {
-                if (!DataManager.Current.JobInfos.First(c => c.Name == SelectedJobInfo.Name).Obsolete)
-                {
-                    JobManager.GetSchedule(SelectedJobInfo.Name).Disable();
-
-                }
-                RefreshAction();
+                JobInfoManager.Abort(SelectedJobInfo.Name);
             }
         }
 
@@ -57,34 +53,11 @@ namespace GeneralServiceHost.ViewModel
         {
             if (this.SelectedJobInfo != null)
             {
-                if (!DataManager.Current.JobInfos.First(c => c.Name == SelectedJobInfo.Name).Obsolete)
-                {
-                    JobManager.GetSchedule(SelectedJobInfo.Name).Enable();
+                JobInfoManager.Start(SelectedJobInfo.Name);
 
-                }
-
-                RefreshAction();
             }
         }
 
-        private void RefreshAction()
-        {
-            foreach (var schedule in DataManager.Current.JobInfos)
-            {
-
-                var c = JobManager.AllSchedules.FirstOrDefault(d => d.Name == schedule.Name);
-                if (c != null)
-                {
-                    schedule.Name = c.Name;
-                    schedule.NextRun = c.NextRun;
-                    schedule.Disabled = c.Disabled;
-                }
-                else
-                {
-                    schedule.Obsolete = true;
-                }
-            }
-        }
         private JobInfo _selectedJobInfo;
 
         public JobInfo SelectedJobInfo
@@ -99,7 +72,6 @@ namespace GeneralServiceHost.ViewModel
                 RaisePropertyChanged(nameof(SelectedJobInfo));
             }
         }
-
 
 
         public RelayCommand RefreshCommand { get; set; }
