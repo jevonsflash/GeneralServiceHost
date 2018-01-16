@@ -144,8 +144,8 @@ namespace GeneralServiceHost.Manager
 
         private static void ErrorAction(object sender)
         {
-            var process = sender as Process;
-            process.Start();
+            var schedule = sender as ScheduleInfo;
+            CmdProcessor(schedule, OutputAction, ErrorAction);          
         }
 
         private static void OutputAction(object sender, OutputArgs arg2)
@@ -154,11 +154,12 @@ namespace GeneralServiceHost.Manager
             var process = sender as Process;
             if (process != null)
             {
-                var name = process.StartInfo.Arguments;
+                var name = arg2.JobName;
                 var content = arg2.OutputContent;
                 var dir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Output", name + ".txt");
-                var log = DataManager.Current.JobInfos.FirstOrDefault(c => c.Name == arg2.JobName).SbLog;
-                log.AppendLine(content);
+                var log = DataManager.Current.JobInfos.FirstOrDefault(c => c.Name == name)?.SbLog;
+                if (log != null)
+                    log.AppendLine(content);
                 //Messenger.Default.Send(new MessageBase(this));
                 //DirFileHelper.AppendText(dir, "\r\n" + content);
 
@@ -194,15 +195,15 @@ namespace GeneralServiceHost.Manager
                 //var msg = ("\n程序异常，错误代码:" + p.ExitCode);
                 //var arg = new OutputArgs(o.Data + msg, scheduleInfo.Name);
                 //outputDataReceivedAction(e, arg);
-                errorDataReceivedAction?.Invoke(o);
+                errorDataReceivedAction?.Invoke(scheduleInfo);
             };
 
             //当EnableRaisingEvents为true，进程退出时Process会调用下面的委托函数
             p.Exited += (o, e) =>
             {
-                var msg = ("\n程序执行完毕，代码:" + p.ExitCode);
-                var arg = new OutputArgs(msg, scheduleInfo.Name);
-                outputDataReceivedAction(e, arg);
+                //var msg = ("\n程序执行完毕，代码:" + p.ExitCode);
+                //var arg = new OutputArgs(msg, scheduleInfo.Name);
+                //outputDataReceivedAction(e, arg);
 
                 exitDataReceivedAction?.Invoke(o);
 
