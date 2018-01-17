@@ -114,6 +114,7 @@
     <Compile Include="Manager\OutputManager.cs" />
     <Compile Include="Manager\ProcessManager.cs" />
     <Compile Include="Model\JobInfo.cs" />
+    <Compile Include="Model\JobStatusType.cs" />
     <Compile Include="Model\ProcessResult.cs" />
     <Compile Include="Model\ScheduleInfo.cs" />
     <Compile Include="Model\ScheduleType.cs" />

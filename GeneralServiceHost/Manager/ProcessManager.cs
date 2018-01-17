@@ -88,10 +88,18 @@ namespace GeneralServiceHost.Manager
             switch (status)
             {
                 case -1:
-                    errorDataReceivedAction?.Invoke(scheduleInfo);
+                    Task.Run(() =>
+                    {
+                        errorDataReceivedAction?.Invoke(scheduleInfo);
+
+                    });
+
                     break;
                 case 1:
-                    exitDataReceivedAction?.Invoke(scheduleInfo);
+                    Task.Run(() =>
+                    {
+                        exitDataReceivedAction?.Invoke(scheduleInfo);
+                    });
                     break;
                 case 0: break;
                 default:
