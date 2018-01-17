@@ -637,7 +637,21 @@ namespace GeneralServiceHost.Helper
             return str;
         }
 
-
+        /// <summary>  
+                ///     读取文件最后一行  
+                /// </summary>  
+                /// <param name="filePath"></param>  
+                /// <returns></returns>  
+        public static string ReadLastLines(string filePath)
+        {
+            StreamReader sr = new StreamReader(filePath);
+            string str = string.Empty;
+            while (!sr.EndOfStream)
+            {
+                str = sr.ReadLine();
+            }
+            return str;
+        }
 
         #region 将现有文件的内容复制到新文件中
         /// <summary>

@@ -14,9 +14,9 @@
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
+                <RowDefinition Height="60"></RowDefinition>
                 <RowDefinition Height="1*"></RowDefinition>
-                <RowDefinition Height="10*"></RowDefinition>
-                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="30"></RowDefinition>
             </Grid.RowDefinitions>
             <Grid Grid.Row="1"
                   x:Name="JobGrid">
@@ -72,10 +72,14 @@
                     </ListView.ItemTemplate>
 
                 </ListView>
-                <StackPanel Grid.Column="1"
+                <Grid Grid.Column="1"
                             DataContext="{Binding SelectedJobInfo}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="140"></RowDefinition>
+                        <RowDefinition Height="1*"></RowDefinition>
+                    </Grid.RowDefinitions>
                     <GroupBox Header="基本信息">
-                        <WrapPanel Orientation="Horizontal">
+                        <WrapPanel Orientation="Vertical">
 
                             <control:SimpleKeyValueControl KeyText="名称"
                                                            ValueText="{Binding ScheduleInfo.Name}"></control:SimpleKeyValueControl>
@@ -95,13 +99,15 @@
                                                            ValueText="{Binding ScheduleInfo.Value}"></control:SimpleKeyValueControl>
                         </WrapPanel>
                     </GroupBox>
-                    <GroupBox Header="输出">
+                    <GroupBox Header="输出" Grid.Row="1">
                         <ScrollViewer>
-                            <TextBlock TextWrapping="Wrap"
-                                       Text="{Binding SbLog}"></TextBlock>
+                            <ItemsControl 
+                            VirtualizingPanel.IsVirtualizing="True" 
+                            VirtualizingPanel.VirtualizationMode="Recycling" 
+                            ItemsSource="{Binding SbLog}"></ItemsControl>
                         </ScrollViewer>
                     </GroupBox>
-                </StackPanel>
+                </Grid>
             </Grid>
 
             <StackPanel Grid.Row="0"
@@ -126,7 +132,16 @@
                         Command="{Binding AbortCommand}"
                         Width="150"></Button>
             </StackPanel>
+            <Grid Grid.Row="2">
+                <StackPanel Grid.Row="0"
+                        Orientation="Horizontal"
+                        HorizontalAlignment="Left">
+                    <TextBlock Text="{Binding Source={StaticResource DataManager}, Path=Current.JobInfos.Count}"></TextBlock>
+                    <TextBlock Text="个任务"></TextBlock>
+                    
+                </StackPanel>
 
+            </Grid>
         </Grid>
     </Grid>
 </Page>

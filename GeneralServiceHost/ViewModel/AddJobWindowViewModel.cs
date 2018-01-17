@@ -14,7 +14,7 @@ namespace GeneralServiceHost.ViewModel
     public class AddJobWindowViewModel : ViewModelBase
     {
         public AddJobWindowViewModel()
-        {        
+        {
             this.SetCommand = new RelayCommand(SetAction);
             UploadFileCommand = new RelayCommand(UploadFileAction);
             this.ScheduleInfo = new ScheduleInfo() { Name = "程序集选择完成后显示" };
@@ -50,7 +50,9 @@ namespace GeneralServiceHost.ViewModel
 
         private void SetAction()
         {
-            JobInfoManager.Run(this.ScheduleInfo);
+            JobInfoManager.RunSchedule(this.ScheduleInfo);
+            JobInfoManager.CreateJob(this.ScheduleInfo);
+            JobInfoManager.Refresh();
         }
 
         public RelayCommand SetCommand { get; set; }

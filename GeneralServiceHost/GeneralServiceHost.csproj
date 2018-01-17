@@ -111,7 +111,10 @@
     <Compile Include="Helper\FileHelper.cs" />
     <Compile Include="Manager\DataManager.cs" />
     <Compile Include="Manager\JobInfoManager.cs" />
+    <Compile Include="Manager\OutputManager.cs" />
+    <Compile Include="Manager\ProcessManager.cs" />
     <Compile Include="Model\JobInfo.cs" />
+    <Compile Include="Model\ProcessResult.cs" />
     <Compile Include="Model\ScheduleInfo.cs" />
     <Compile Include="Model\ScheduleType.cs" />
     <Compile Include="ViewModel\AddJobWindowViewModel.cs" />

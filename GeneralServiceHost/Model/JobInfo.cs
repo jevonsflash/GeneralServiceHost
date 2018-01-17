@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Controls;
 using FluentScheduler;
 using GalaSoft.MvvmLight;
+using Newtonsoft.Json;
 
 namespace GeneralServiceHost.Model
 {
@@ -16,11 +17,10 @@ namespace GeneralServiceHost.Model
         public JobInfo()
         {
             this.Obsolete = false;
-            this.SbLog = new StringBuilder();
+            this.SbLog = new ObservableCollection<string>();
         }
-        //
-        // 摘要:
-        //     Flag indicating if this job schedule is disabled.
+
+
         private bool _disabled;
         public bool Disabled
         {
@@ -31,9 +31,7 @@ namespace GeneralServiceHost.Model
                 RaisePropertyChanged(nameof(Disabled));
             }
         }
-        //
-        // 摘要:
-        //     Name of this job schedule.
+
 
         private string _name;
         public string Name
@@ -51,10 +49,21 @@ namespace GeneralServiceHost.Model
             }
         }
 
-      
-        //
-        // 摘要:
-        //     Date and time of the next run of this job schedule.
+        private DateTime _lastRun;
+        public DateTime LastRun
+        {
+            get
+            {
+                return _lastRun;
+
+            }
+            set
+            {
+                _nextRun = value;
+                RaisePropertyChanged(nameof(LastRun));
+            }
+        }
+
         private DateTime _nextRun;
         public DateTime NextRun
         {
@@ -70,8 +79,46 @@ namespace GeneralServiceHost.Model
             }
         }
 
-        private StringBuilder _sbLog;
-        public StringBuilder SbLog
+        private int _runCount;
+
+        public int RunCount
+        {
+            get { return _runCount; }
+            set {
+                _runCount = value;
+                RaisePropertyChanged(nameof(RunCount));
+            }
+        }
+
+        private int _successCount;
+
+        public int SucessCount
+        {
+            get { return _successCount; }
+            set
+            {
+                _successCount = value;
+                RaisePropertyChanged(nameof(SucessCount));
+            }
+        }
+
+        private int _errorCount;
+
+        public int ErrorCount
+        {
+            get { return _errorCount; }
+            set
+            {
+                _errorCount = value;
+                RaisePropertyChanged(nameof(ErrorCount));
+            }
+        }
+
+
+        private ObservableCollection<string> _sbLog;
+
+        [JsonIgnore]
+        public ObservableCollection<string> SbLog
         {
             get
             {

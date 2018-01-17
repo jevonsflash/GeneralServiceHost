@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -26,9 +27,30 @@ namespace GeneralServiceHost.ViewModel
             this.RefreshCommand = new RelayCommand(RefreshAction);
             this.StartCommand = new RelayCommand<string>(StartAction);
             this.AbortCommand = new RelayCommand<string>(AbortAction);
+            this.PropertyChanged += IndexPageViewModel_PropertyChanged;
             DataManager.Current.ReadFinishedEvent += Current_ReadFinishedEvent;
             DataManager.Current.Read();
-            
+
+        }
+
+        private async void IndexPageViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(this.SelectedJobInfo))
+            {
+                if (this.SelectedJobInfo.SbLog.Count == 0)
+                {
+                    var str = await OutputManager.ReadOutput(SelectedJobInfo.Name);
+
+                    if (!string.IsNullOrEmpty(str))
+                    {
+                        var strList = str.Split('\n');
+
+                        this.SelectedJobInfo.SbLog = new ObservableCollection<string>(strList);
+                    }
+
+
+                }
+            }
         }
 
         private void Current_ReadFinishedEvent(object sender, EventArgs e)
@@ -46,6 +68,7 @@ namespace GeneralServiceHost.ViewModel
             if (this.SelectedJobInfo != null)
             {
                 JobInfoManager.Abort(SelectedJobInfo.Name);
+
             }
         }
 

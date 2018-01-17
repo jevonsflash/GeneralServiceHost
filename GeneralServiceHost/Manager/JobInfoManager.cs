@@ -14,6 +14,7 @@ namespace GeneralServiceHost.Manager
 {
     public class JobInfoManager
     {
+
         static JobInfoManager()
         {
             JobManager.JobEnd += JobManager_JobEnd;
@@ -35,35 +36,52 @@ namespace GeneralServiceHost.Manager
         /// </summary>
         public static void Refresh()
         {
-            foreach (var schedule in DataManager.Current.JobInfos)
+            foreach (var jobItem in DataManager.Current.JobInfos)
             {
 
-                var c = JobManager.AllSchedules.FirstOrDefault(d => d.Name == schedule.Name);
+                var c = JobManager.AllSchedules.FirstOrDefault(d => d.Name == jobItem.Name);
                 if (c != null)
                 {
-                    schedule.Name = c.Name;
-                    schedule.NextRun = c.NextRun;
-                    schedule.Disabled = c.Disabled;
+                    jobItem.Name = c.Name;
+                    jobItem.NextRun = c.NextRun;
+                    jobItem.Disabled = c.Disabled;
+                    jobItem.Obsolete = false;
+
                 }
                 else
                 {
-                    schedule.Obsolete = true;
+                    jobItem.NextRun = DateTime.MinValue;
+                    jobItem.Obsolete = true;
                 }
             }
 
             DataManager.Current.Save();
         }
+
+        /// <summary>
+        /// 开始Job操作
+        /// </summary>
+        /// <param name="name"></param>
         public static void Start(string name)
         {
-            if (!DataManager.Current.JobInfos.First(c => c.Name == name).Obsolete)
+            var currentJobInfo = DataManager.Current.JobInfos.First(c => c.Name == name);
+            if (!currentJobInfo.Obsolete)
             {
                 JobManager.GetSchedule(name).Enable();
 
             }
+            else
+            {
+                RunSchedule(currentJobInfo.ScheduleInfo);
 
+            }
             Refresh();
         }
 
+        /// <summary>
+        /// 中断Job操作
+        /// </summary>
+        /// <param name="name"></param>
         public static void Abort(string name)
         {
             if (!DataManager.Current.JobInfos.First(c => c.Name == name).Obsolete)
@@ -74,10 +92,14 @@ namespace GeneralServiceHost.Manager
             Refresh();
         }
 
-        public static void Run(ScheduleInfo ScheduleInfo)
+        /// <summary>
+        /// 运行计划单
+        /// </summary>
+        /// <param name="ScheduleInfo"></param>
+        public static void RunSchedule(ScheduleInfo ScheduleInfo)
         {
             GeneralServiceRegistry _generalServiceRegistry = new GeneralServiceRegistry();
-            if (DataManager.Current.JobInfos.Where(c => c.Name == ScheduleInfo.Name).Any())
+            if (JobManager.AllSchedules.Where(c => c.Name == ScheduleInfo.Name).Any())
             {
                 MessageBox.Show(string.Format("已经包含名称为{0}的Job", ScheduleInfo.Name));
 
@@ -86,42 +108,88 @@ namespace GeneralServiceHost.Manager
 
             if (ScheduleInfo.IsGeneralJob)
             {
+                ProcessResult result;
                 _generalServiceRegistry.SetAndRegistryGeneralService(ScheduleInfo, (sch) =>
-              {
-                  if (ScheduleInfo.IsGuard)
-                  {
-                      CmdProcessor(sch, OutputAction, ErrorAction);
-                  }
-                  else
-                  {
-                      CmdProcessor(sch, OutputAction);
-                  }
+                {
+                    if (ScheduleInfo.IsGuard)
+                    {
+                        var processMgr = new ProcessManager(sch);
+                        result = processMgr.RunProcess(OutputAction, ErrorAction);
+                    }
+                    else
+                    {
+                        var processMgr = new ProcessManager(sch);
+                        result = processMgr.RunProcess(OutputAction);
+                    }
 
-
-              });
+                    FinishJob(result);
+                });
 
             }
             else
             {
                 _generalServiceRegistry.SetAndRegistryDelayService(ScheduleInfo, (sch) =>
-               {
+                {
+                    ProcessResult result;
+                    if (ScheduleInfo.IsGuard)
+                    {
+                        var processMgr = new ProcessManager(sch);
+                        result = processMgr.RunProcess(OutputAction, ErrorAction);
+                    }
+                    else
+                    {
+                        var processMgr = new ProcessManager(sch);
+                        result = processMgr.RunProcess(OutputAction);
+                    }
 
-                   if (ScheduleInfo.IsGuard)
-                   {
-                       CmdProcessor(sch, OutputAction, ErrorAction);
-                   }
-                   else
-                   {
-                       CmdProcessor(sch, OutputAction);
-                   }
+                    FinishJob(result);
 
-
-               });
+                });
 
             }
 
             JobManager.Initialize(_generalServiceRegistry);
 
+
+
+
+
+        }
+
+        /// <summary>
+        /// 对Job做完成处理
+        /// </summary>
+        /// <param name="result"></param>
+        private static void FinishJob(ProcessResult result)
+        {
+            var currentJob = DataManager.Current.JobInfos.FirstOrDefault(c => c.Name == result.Name);
+            currentJob.LastRun = result.Starttime;
+
+            switch (result.Status)
+            {
+                case -1:
+
+                    currentJob.RunCount++;
+                    currentJob.ErrorCount++;
+                    break;
+                case 1:
+                    currentJob.RunCount++;
+                    currentJob.SucessCount++;
+                    break;
+                case 0: break;
+
+                default:
+                    break;
+            }
+            DataManager.Current.Save();
+        }
+
+        /// <summary>
+        /// 添加任务
+        /// </summary>
+        /// <param name="ScheduleInfo"></param>
+        public static void CreateJob(ScheduleInfo ScheduleInfo)
+        {
             var schedule = JobManager.GetSchedule(ScheduleInfo.Name);
             if (schedule != null)
             {
@@ -131,92 +199,46 @@ namespace GeneralServiceHost.Manager
                     Name = schedule.Name,
                     Disabled = schedule.Disabled,
                     NextRun = schedule.NextRun,
-                    ScheduleInfo = ScheduleInfo
-
+                    ScheduleInfo = ScheduleInfo,
+                    LastRun = DateTime.MinValue,
+                    RunCount = 0
                 };
                 DataManager.Current.JobInfos.Add(jobInfo);
                 MessageBox.Show("成功添加");
             }
-
-            Refresh();
-
         }
 
+        /// <summary>
+        /// 运行程序异常
+        /// </summary>
+        /// <param name="sender"></param>
         private static void ErrorAction(object sender)
         {
-            var schedule = sender as ScheduleInfo;
-            CmdProcessor(schedule, OutputAction, ErrorAction);          
+            var sch = sender as ScheduleInfo;
+            var processMgr = new ProcessManager(sch);
+            processMgr.RunProcess(OutputAction, ErrorAction);
         }
 
+        /// <summary>
+        /// 程序输出
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="arg2"></param>
         private static void OutputAction(object sender, OutputArgs arg2)
         {
-
-            var process = sender as Process;
-            if (process != null)
+            var name = arg2.JobName;
+            var content = arg2.OutputContent;
+            var createTime = DateTime.Now;
+            var log = DataManager.Current.JobInfos.FirstOrDefault(c => c.Name == name)?.SbLog;
+            var value = string.Format("[{0}]{1}", createTime.ToString("yyyy-MM-dd hh:mm:ss"), content);
+            App.Current.Dispatcher.Invoke((Action)delegate
             {
-                var name = arg2.JobName;
-                var content = arg2.OutputContent;
-                var dir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Output", name + ".txt");
-                var log = DataManager.Current.JobInfos.FirstOrDefault(c => c.Name == name)?.SbLog;
-                if (log != null)
-                    log.AppendLine(content);
-                //Messenger.Default.Send(new MessageBase(this));
-                //DirFileHelper.AppendText(dir, "\r\n" + content);
+                log.Add(value);
+            });
+            OutputManager.AppendOutput(name, value + "\n");
 
-            }
         }
 
-        private static void CmdProcessor(ScheduleInfo scheduleInfo, Action<object, OutputArgs> outputDataReceivedAction, Action<object> errorDataReceivedAction = null, Action<object> exitDataReceivedAction = null)
-        {
-
-            var p = new Process()
-            {
-                StartInfo =
-                {
-
-                    FileName = scheduleInfo.AsmPath,
-                    UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError=true,
-                    CreateNoWindow = true,
-                    Arguments = scheduleInfo.Name
-
-                }
-            };
-
-            p.Start();
-            p.OutputDataReceived += (e, o) =>
-            {
-                var arg = new OutputArgs(o.Data, scheduleInfo.Name);
-                outputDataReceivedAction(e, arg);
-            };
-            p.ErrorDataReceived += (e, o) =>
-            {
-                //var msg = ("\n程序异常，错误代码:" + p.ExitCode);
-                //var arg = new OutputArgs(o.Data + msg, scheduleInfo.Name);
-                //outputDataReceivedAction(e, arg);
-                errorDataReceivedAction?.Invoke(scheduleInfo);
-            };
-
-            //当EnableRaisingEvents为true，进程退出时Process会调用下面的委托函数
-            p.Exited += (o, e) =>
-            {
-                //var msg = ("\n程序执行完毕，代码:" + p.ExitCode);
-                //var arg = new OutputArgs(msg, scheduleInfo.Name);
-                //outputDataReceivedAction(e, arg);
-
-                exitDataReceivedAction?.Invoke(o);
-
-
-            };
-            p.EnableRaisingEvents = true;
-            p.BeginOutputReadLine();
-            p.BeginErrorReadLine();
-            p.WaitForExit();
-            p.Close();
-
-
-        }
 
     }
 }
