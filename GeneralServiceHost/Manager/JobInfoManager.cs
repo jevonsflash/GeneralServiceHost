@@ -40,18 +40,34 @@ namespace GeneralServiceHost.Manager
             {
 
                 var c = JobManager.AllSchedules.FirstOrDefault(d => d.Name == jobItem.Name);
-                if (c != null)
+                if (DataManager.Current.RunningJob.Contains(jobItem.Name))
                 {
-                    jobItem.Name = c.Name;
-                    jobItem.NextRun = c.NextRun;
-                    jobItem.Disabled = c.Disabled;
-                    jobItem.Obsolete = false;
+                    jobItem.Status = JobStatusType.Running;
 
                 }
                 else
                 {
-                    jobItem.NextRun = DateTime.MinValue;
-                    jobItem.Obsolete = true;
+                    if (c != null)
+                    {
+                        jobItem.Name = c.Name;
+                        jobItem.NextRun = c.NextRun;
+                        if (c.Disabled)
+                        {
+                            jobItem.Status = JobStatusType.Stop;
+                        }
+                        else
+                        {
+                            jobItem.Status = JobStatusType.Pending;
+
+                        }
+                    }
+                    else
+                    {
+                        jobItem.NextRun = DateTime.MinValue;
+                        jobItem.Status = JobStatusType.Obsolete;
+
+                    }
+
                 }
             }
 
@@ -65,14 +81,40 @@ namespace GeneralServiceHost.Manager
         public static void Start(string name)
         {
             var currentJobInfo = DataManager.Current.JobInfos.First(c => c.Name == name);
-            if (!currentJobInfo.Obsolete)
+            if (currentJobInfo.Status == JobStatusType.Stop)
             {
                 JobManager.GetSchedule(name).Enable();
 
             }
+            else if (currentJobInfo.Status == JobStatusType.Obsolete)
+            {
+                DataManager.Current.JobInfos.Remove(currentJobInfo);
+
+                var isSuccess = RunSchedule(currentJobInfo.ScheduleInfo);
+                if (isSuccess)
+                {
+                    var isCreateJobSuccess = JobInfoManager.CreateJob(currentJobInfo.ScheduleInfo);
+                    if (isCreateJobSuccess)
+                    {
+                        MessageBox.Show("任务启用成功");
+
+                    }
+                    else
+                    {
+                        MessageBox.Show("任务启用失败");
+
+                    }
+                    JobInfoManager.Refresh();
+                }
+                else
+                {
+                    MessageBox.Show("任务启用失败");
+                }
+            }
+
             else
             {
-                RunSchedule(currentJobInfo.ScheduleInfo);
+                MessageBox.Show("任务已经在启用状态");
 
             }
             Refresh();
@@ -84,7 +126,7 @@ namespace GeneralServiceHost.Manager
         /// <param name="name"></param>
         public static void Abort(string name)
         {
-            if (!DataManager.Current.JobInfos.First(c => c.Name == name).Obsolete)
+            if (DataManager.Current.JobInfos.First(c => c.Name == name).Status == JobStatusType.Pending)
             {
                 JobManager.GetSchedule(name).Disable();
 
@@ -96,14 +138,14 @@ namespace GeneralServiceHost.Manager
         /// 运行计划单
         /// </summary>
         /// <param name="ScheduleInfo"></param>
-        public static void RunSchedule(ScheduleInfo ScheduleInfo)
+        public static bool RunSchedule(ScheduleInfo ScheduleInfo)
         {
             GeneralServiceRegistry _generalServiceRegistry = new GeneralServiceRegistry();
-            if (JobManager.AllSchedules.Where(c => c.Name == ScheduleInfo.Name).Any())
+            if (DataManager.Current.JobInfos.Where(c => c.Name == ScheduleInfo.Name).Any())
             {
                 MessageBox.Show(string.Format("已经包含名称为{0}的Job", ScheduleInfo.Name));
 
-                return;
+                return false;
             }
 
             if (ScheduleInfo.IsGeneralJob)
@@ -149,11 +191,7 @@ namespace GeneralServiceHost.Manager
             }
 
             JobManager.Initialize(_generalServiceRegistry);
-
-
-
-
-
+            return true;
         }
 
         /// <summary>
@@ -171,13 +209,15 @@ namespace GeneralServiceHost.Manager
 
                     currentJob.RunCount++;
                     currentJob.ErrorCount++;
+
                     break;
                 case 1:
                     currentJob.RunCount++;
                     currentJob.SucessCount++;
                     break;
-                case 0: break;
-
+                case 0:
+                    currentJob.ErrorCount++;
+                    break;
                 default:
                     break;
             }
@@ -188,7 +228,7 @@ namespace GeneralServiceHost.Manager
         /// 添加任务
         /// </summary>
         /// <param name="ScheduleInfo"></param>
-        public static void CreateJob(ScheduleInfo ScheduleInfo)
+        public static bool CreateJob(ScheduleInfo ScheduleInfo)
         {
             var schedule = JobManager.GetSchedule(ScheduleInfo.Name);
             if (schedule != null)
@@ -197,14 +237,19 @@ namespace GeneralServiceHost.Manager
                 var jobInfo = new JobInfo()
                 {
                     Name = schedule.Name,
-                    Disabled = schedule.Disabled,
                     NextRun = schedule.NextRun,
                     ScheduleInfo = ScheduleInfo,
                     LastRun = DateTime.MinValue,
                     RunCount = 0
                 };
+
+
                 DataManager.Current.JobInfos.Add(jobInfo);
-                MessageBox.Show("成功添加");
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 

@@ -35,7 +35,7 @@ namespace GeneralServiceHost.ViewModel
 
         private async void IndexPageViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(this.SelectedJobInfo))
+            if (e.PropertyName == nameof(this.SelectedJobInfo) && this.SelectedJobInfo != null)
             {
                 if (this.SelectedJobInfo.SbLog.Count == 0)
                 {

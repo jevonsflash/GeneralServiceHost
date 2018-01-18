@@ -16,19 +16,19 @@ namespace GeneralServiceHost.Model
 
         public JobInfo()
         {
-            this.Obsolete = false;
+            this.Status = JobStatusType.Unspecified;
             this.SbLog = new ObservableCollection<string>();
         }
 
 
-        private bool _disabled;
-        public bool Disabled
+        private JobStatusType _status;
+
+        public JobStatusType Status
         {
-            get { return _disabled; }
-            set
-            {
-                _disabled = value;
-                RaisePropertyChanged(nameof(Disabled));
+            get { return _status; }
+            set {
+                _status = value;
+                RaisePropertyChanged(nameof(Status));
             }
         }
 
@@ -140,18 +140,7 @@ namespace GeneralServiceHost.Model
                 _scheduleInfo = value;
                 RaisePropertyChanged(nameof(ScheduleInfo));
             }
-        }
-
-        private bool _obsolete;
-        public bool Obsolete
-        {
-            get { return _obsolete; }
-            set
-            {
-                _obsolete = value;
-                RaisePropertyChanged(nameof(Obsolete));
-            }
-        }
+        }      
 
     }
 }

@@ -13,110 +13,121 @@ using Newtonsoft.Json;
 
 namespace GeneralServiceHost.Manager
 {
-	public class DataManager : ViewModelBase
-	{
-		private static Object _locker = new object();
+    public class DataManager : ViewModelBase
+    {
+        private static Object _locker = new object();
 
-		public event EventHandler ReadFinishedEvent;
+        public event EventHandler ReadFinishedEvent;
 
-		static string jobsFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Jobs.txt");
+        static string jobsFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Jobs.txt");
 
-		public DataManager()
-		{
-			JobInfos = new ObservableCollection<JobInfo>();
-			JobInfos.CollectionChanged += JobInfos_CollectionChanged;
+        public DataManager()
+        {
+            JobInfos = new ObservableCollection<JobInfo>();
+            JobInfos.CollectionChanged += JobInfos_CollectionChanged;
+            RunningJob = new List<string>();
 
+        }
 
-		}
+        private async void ReadJobs()
+        {
+            var result = await Task.Run(() =>
+            {
+                DirFileHelper.ExistsFile(jobsFile);
+                var jsonInfos = DirFileHelper.ReadFile(jobsFile);
+                if (jsonInfos != null)
+                {
+                    var jobInfoList = JsonConvert.DeserializeObject<List<JobInfo>>(jsonInfos);
+                    return jobInfoList;
+                }
+                else
+                {
+                    return null;
+                }
 
-		private async void ReadJobs()
-		{
-			var result = await Task.Run(() =>
-			{
-				DirFileHelper.ExistsFile(jobsFile);
-				var jsonInfos = DirFileHelper.ReadFile(jobsFile);
-				if (jsonInfos != null)
-				{
-					var jobInfoList = JsonConvert.DeserializeObject<List<JobInfo>>(jsonInfos);
-					return jobInfoList;
-				}
-				else
-				{
-					return null;
-				}
+            });
+            JobInfos = result != null ? new ObservableCollection<JobInfo>(result) : new ObservableCollection<JobInfo>();
+            JobInfos.CollectionChanged += JobInfos_CollectionChanged;
+            ReadFinishedEvent.Invoke(this, EventArgs.Empty);
+        }
 
-			});
-			JobInfos = result != null ? new ObservableCollection<JobInfo>(result) : new ObservableCollection<JobInfo>();
-			JobInfos.CollectionChanged += JobInfos_CollectionChanged;
-			ReadFinishedEvent.Invoke(this, EventArgs.Empty);
-		}
+        private async void SaveJobs()
+        {
+            var jobInfoList = this.JobInfos.ToList();
+            await Task.Run(() =>
+            {
+                lock (_locker)
+                {
+                    var jsonJobs = JsonConvert.SerializeObject(jobInfoList);
+                    DirFileHelper.WriteText(jobsFile, jsonJobs);
+                }
+            });
+        }
 
-		private async void SaveJobs()
-		{
-			var jobInfoList = this.JobInfos.ToList();
-			await Task.Run(() =>
-			{
-				lock (_locker)
-				{
-					var jsonJobs = JsonConvert.SerializeObject(jobInfoList);
-					DirFileHelper.WriteText(jobsFile, jsonJobs);
-				}
-			});
-		}
+        public void Save()
+        {
+            SaveJobs();
+        }
 
-		public void Save()
-		{
-			SaveJobs();
-		}
+        public void Read()
+        {
+            ReadJobs();
+        }
 
-		public void Read()
-		{
-			ReadJobs();
-		}
+        private void JobInfos_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            this.Obsolete = this.JobInfos.Where(c => c.Status == JobStatusType.Obsolete).Count();
+            this.Total = this.JobInfos.Count();
+        }
 
-		private void JobInfos_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-		{
+        private static DataManager _current;
 
-			//if (e.Action == NotifyCollectionChangedAction.Add || e.Action == NotifyCollectionChangedAction.Remove)
-			//{
-			//    SaveJobs();
-			//}
+        public static DataManager Current
+        {
+            get
+            {
+                if (_current == null)
 
+                {
+                    _current = new DataManager();
+                }
+                return _current;
+            }
+        }
 
-		}
+        private ObservableCollection<JobInfo> _jobInfos;
+        public ObservableCollection<JobInfo> JobInfos
+        {
+            get
+            {
 
-		private static DataManager _current;
+                return _jobInfos;
+            }
 
-		public static DataManager Current
-		{
-			get
-			{
-				if (_current == null)
+            set
+            {
+                _jobInfos = value;
 
-				{
-					_current = new DataManager();
-				}
-				return _current;
-			}
-		}
+                base.RaisePropertyChanged(nameof(JobInfos));
+            }
+        }
 
-		private ObservableCollection<JobInfo> _jobInfos;
-		public ObservableCollection<JobInfo> JobInfos
-		{
-			get
-			{
+        public int Total { get; private set; }
 
-				return _jobInfos;
-			}
+        public int Obsolete { get; private set; }
 
-			set
-			{
-				_jobInfos = value;
+        private List<string> _runningJob;
 
-				base.RaisePropertyChanged(nameof(JobInfos));
-			}
-		}
+        public List<string> RunningJob
+        {
+            get { return _runningJob; }
+            set
+            {
+                _runningJob = value;
+                base.RaisePropertyChanged(nameof(RunningJob));
 
+            }
+        }
 
-	}
+    }
 }

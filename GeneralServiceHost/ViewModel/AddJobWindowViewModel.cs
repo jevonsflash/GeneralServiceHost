@@ -50,9 +50,27 @@ namespace GeneralServiceHost.ViewModel
 
         private void SetAction()
         {
-            JobInfoManager.RunSchedule(this.ScheduleInfo);
-            JobInfoManager.CreateJob(this.ScheduleInfo);
-            JobInfoManager.Refresh();
+            var isSuccess = JobInfoManager.RunSchedule(this.ScheduleInfo);
+            if (isSuccess)
+            {
+                var isCreateJobSuccess= JobInfoManager.CreateJob(this.ScheduleInfo);
+                if (isCreateJobSuccess)
+                {
+                    MessageBox.Show("任务启用成功");
+
+                }
+                else
+                {
+                    MessageBox.Show("任务启用失败");
+
+                }
+                JobInfoManager.Refresh();
+            }
+            else
+            {
+                MessageBox.Show("任务启用失败");
+            }
+
         }
 
         public RelayCommand SetCommand { get; set; }

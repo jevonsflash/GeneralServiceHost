@@ -13,6 +13,7 @@
         <ResourceDictionary>
             <converter1:Bool2VisibilityConverter x:Key="Bool2VisibilityConverter"></converter1:Bool2VisibilityConverter>
             <converter1:Bool2StringConverter x:Key="Bool2StringConverter"></converter1:Bool2StringConverter>
+            <converter1:JobStatus2ColorConverter x:Key="JobStatus2ColorConverter"></converter1:JobStatus2ColorConverter>
 
             <system:Double x:Key="LargeFontSize">32</system:Double>
 

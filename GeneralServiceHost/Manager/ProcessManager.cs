@@ -21,6 +21,7 @@ namespace GeneralServiceHost.Manager
 
         public ProcessResult RunProcess(Action<object, OutputArgs> outputDataReceivedAction, Action<object> errorDataReceivedAction = null, Action<object> exitDataReceivedAction = null)
         {
+            
             DateTime Starttime;
             DateTime Endtime;
             var status = 0;
@@ -39,6 +40,16 @@ namespace GeneralServiceHost.Manager
 
                     }
             };
+            if (DataManager.Current.RunningJob.Contains(scheduleInfo.Name))
+            {
+                return new ProcessResult()
+                {
+                    Status = status,
+                    Name = scheduleInfo.Name
+                };
+            }
+            DataManager.Current.RunningJob.Add(scheduleInfo.Name);
+            JobInfoManager.Refresh();
             p.Start();
             Starttime = p.StartTime;
 
@@ -84,6 +95,7 @@ namespace GeneralServiceHost.Manager
             p.WaitForExit();
             Endtime = p.ExitTime;
             p.Close();
+            DataManager.Current.RunningJob.Remove(scheduleInfo.Name);
 
             switch (status)
             {

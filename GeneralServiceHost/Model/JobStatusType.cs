@@ -8,10 +8,11 @@ namespace GeneralServiceHost.Model
 {
     public  enum JobStatusType
     {
-       Suspend, //挂起中
+       Unspecified, //未指定
 	   Running, //执行中
 	   Rerunning, //守护重新执行中
 	   Stop,//停止中
-	   Obsolete //已结束
+	   Obsolete, //已结束
+       Pending  //挂起中
     }
 }

@@ -41,22 +41,11 @@
 
                                 <Rectangle Grid.Column="0"
                                            Grid.RowSpan="2"
-                                           Fill="Red"
-                                           Visibility="{Binding Disabled,Converter={StaticResource Bool2VisibilityConverter},ConverterParameter=true}">
+                                           Fill="{Binding Status, Converter={StaticResource JobStatus2ColorConverter}}"
+                                           >
 
                                 </Rectangle>
-                                <Rectangle Grid.Column="0"
-                                           Grid.RowSpan="2"
-                                           Fill="Green"
-                                           Visibility="{Binding Disabled,Converter={StaticResource Bool2VisibilityConverter},ConverterParameter=false}">
-
-                                </Rectangle>
-                                <Rectangle Grid.Column="0"
-                                           Grid.RowSpan="2"
-                                           Fill="Gray"
-                                           Visibility="{Binding Obsolete,Converter={StaticResource Bool2VisibilityConverter},ConverterParameter=true}">
-
-                                </Rectangle>
+        
 
                                 <StackPanel Grid.RowSpan="2"
                                             Grid.Column="1">
@@ -64,7 +53,7 @@
                                                FontSize="{StaticResource LargeFontSize}"></TextBlock>
 
                                     <control:SimpleKeyValueControl KeyText="下次执行时间"
-                                                                   ValueText="{Binding NextRun}"></control:SimpleKeyValueControl>
+                                                                   ValueText="{Binding NextRun}" ContentStringFormat="MM-dd hh:mm:ss"></control:SimpleKeyValueControl>
 
                                 </StackPanel>
                             </Grid>
@@ -136,9 +125,10 @@
                 <StackPanel Grid.Row="0"
                         Orientation="Horizontal"
                         HorizontalAlignment="Left">
-                    <TextBlock Text="{Binding Source={StaticResource DataManager}, Path=Current.JobInfos.Count}"></TextBlock>
-                    <TextBlock Text="个任务"></TextBlock>
-                    
+                    <TextBlock Text="{Binding Source={StaticResource DataManager}, Path=Current.Current.Total}" ></TextBlock>
+                    <TextBlock Text="个任务中"></TextBlock>
+                    <TextBlock Text="{Binding Source={StaticResource DataManager}, Path=Current.Current.Obsolete}" ></TextBlock>
+                    <TextBlock Text="个已经过期"></TextBlock>
                 </StackPanel>
 
             </Grid>
