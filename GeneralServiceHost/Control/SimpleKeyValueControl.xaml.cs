@@ -40,7 +40,7 @@ namespace GeneralServiceHost.Control
 
         public string KeyText
         {
-            get { return GetValue(KeyTextProperty).ToString(); }
+            get { return (string)GetValue(KeyTextProperty); }
             set { SetValue(KeyTextProperty, value); }
         }
 
@@ -56,7 +56,7 @@ namespace GeneralServiceHost.Control
 
         public string ValueText
         {
-            get { return GetValue(ValueTextProperty).ToString(); }
+            get { return (string)GetValue(ValueTextProperty); }
             set { SetValue(ValueTextProperty, value); }
         }
 
@@ -73,7 +73,7 @@ namespace GeneralServiceHost.Control
 
         public string UnitText
         {
-            get { return GetValue(UnitTextProperty).ToString(); }
+            get { return (string)GetValue(UnitTextProperty); }
             set { SetValue(UnitTextProperty, value); }
         }
 

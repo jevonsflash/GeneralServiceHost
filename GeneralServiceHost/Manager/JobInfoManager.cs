@@ -88,7 +88,7 @@ namespace GeneralServiceHost.Manager
             }
             else if (currentJobInfo.Status == JobStatusType.Obsolete)
             {
-                DataManager.Current.JobInfos.Remove(currentJobInfo);
+                JobInfoManager.RemoveJob(currentJobInfo);
 
                 var isSuccess = RunSchedule(currentJobInfo.ScheduleInfo);
                 if (isSuccess)
@@ -133,6 +133,33 @@ namespace GeneralServiceHost.Manager
             }
             Refresh();
         }
+
+        /// <summary>
+        /// 删除Job操作
+        /// </summary>
+        /// <param name="name"></param>
+        public static void Dorp(string name)
+        {
+            if (DataManager.Current.JobInfos.First(c => c.Name == name).Status == JobStatusType.Pending)
+            {
+
+                JobManager.RemoveJob(name);
+
+            }
+            Refresh();
+        }
+
+
+        /// <summary>
+        /// 清空Job操作
+        /// </summary>
+        /// <param name="name"></param>
+        public static void DorpAll(string name)
+        {
+            JobManager.RemoveAllJobs();
+            Refresh();
+        }
+
 
         /// <summary>
         /// 运行计划单
@@ -251,6 +278,18 @@ namespace GeneralServiceHost.Manager
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// yichu
+        /// </summary>
+        /// <param name="ScheduleInfo"></param>
+        /// <returns></returns>
+        public static bool RemoveJob(JobInfo currentJobInfo)
+        {
+            var result = DataManager.Current.JobInfos.Remove(currentJobInfo);
+            return result;
+
         }
 
         /// <summary>

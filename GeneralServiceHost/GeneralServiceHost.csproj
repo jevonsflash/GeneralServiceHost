@@ -103,6 +103,9 @@
     <Compile Include="Common\GeneralServiceRegistry.cs" />
     <Compile Include="Common\OutputArgs.cs" />
     <Compile Include="Common\WindowWrapper.cs" />
+    <Compile Include="Control\DashboardKeyValueControl.xaml.cs">
+      <DependentUpon>DashboardKeyValueControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Control\SimpleKeyValueControl.xaml.cs">
       <DependentUpon>SimpleKeyValueControl.xaml</DependentUpon>
     </Compile>
@@ -129,6 +132,10 @@
     <Compile Include="View\IndexPage.xaml.cs">
       <DependentUpon>IndexPage.xaml</DependentUpon>
     </Compile>
+    <Page Include="Control\DashboardKeyValueControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Control\SimpleKeyValueControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

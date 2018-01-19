@@ -13,7 +13,7 @@
             <ColumnDefinition Width="Auto"></ColumnDefinition>
             <ColumnDefinition Width="Auto"></ColumnDefinition>
         </Grid.ColumnDefinitions>
-        <Label Content="Key值"
+        <Label Content="Key"
                HorizontalAlignment="Right"
                
                HorizontalContentAlignment="Right"
@@ -24,7 +24,7 @@
                
                Content=":"
                Grid.Column="1"></Label>
-        <Label Content="Value值"
+        <Label Content="N/A"
                HorizontalAlignment="Left"
                
                HorizontalContentAlignment="Left"

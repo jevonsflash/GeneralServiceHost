@@ -45,7 +45,7 @@
                                            >
 
                                 </Rectangle>
-        
+
 
                                 <StackPanel Grid.RowSpan="2"
                                             Grid.Column="1">
@@ -64,29 +64,62 @@
                 <Grid Grid.Column="1"
                             DataContext="{Binding SelectedJobInfo}">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="140"></RowDefinition>
+                        <RowDefinition Height="280"></RowDefinition>
                         <RowDefinition Height="1*"></RowDefinition>
                     </Grid.RowDefinitions>
                     <GroupBox Header="基本信息">
-                        <WrapPanel Orientation="Vertical">
 
-                            <control:SimpleKeyValueControl KeyText="名称"
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="9*"></ColumnDefinition>
+                                <ColumnDefinition Width="3*"></ColumnDefinition>
+                            </Grid.ColumnDefinitions>
+                            <WrapPanel Orientation="Horizontal">
+                                
+                                <control:DashboardKeyValueControl KeyText="距下次运行"
+                                                                  Margin="5"
+                                                                  ValueText="{Binding NextRun}" UnitText="小时"></control:DashboardKeyValueControl>
+                                <control:DashboardKeyValueControl KeyText="下次运行时间" 
+                                                                  Margin="5"
+                                                                  ValueText="{Binding NextRun ,StringFormat=}"></control:DashboardKeyValueControl>
+                                <control:DashboardKeyValueControl KeyText="当前状态"
+                                                                  Margin="5"
+                                                                  ValueText="{Binding Status}"></control:DashboardKeyValueControl>
+                                <control:DashboardKeyValueControl KeyText="最后运行时间" 
+                                                                  Margin="5"
+                                                                  ValueText="{Binding LastRun}"></control:DashboardKeyValueControl>
+                                <control:DashboardKeyValueControl KeyText="已运行" 
+                                                                  Margin="5"
+                                                                  ValueText="{Binding RunCount}"  UnitText="次"></control:DashboardKeyValueControl>
+                                <control:DashboardKeyValueControl KeyText="运行失败" 
+                                                                  Margin="5"
+                                                                  ValueText="{Binding ErrorCount}"  UnitText="次"></control:DashboardKeyValueControl>
+                                <control:DashboardKeyValueControl KeyText="运行成功" 
+                                                                  Margin="5"
+                                                                  ValueText="{Binding SucessCount}"  UnitText="次"></control:DashboardKeyValueControl>
+
+                            </WrapPanel>
+
+                            <StackPanel Orientation="Vertical" Grid.Column="1">
+
+                                <control:SimpleKeyValueControl KeyText="名称"
                                                            ValueText="{Binding ScheduleInfo.Name}"></control:SimpleKeyValueControl>
-                            <control:SimpleKeyValueControl KeyText="程序集名称"
+                                <control:SimpleKeyValueControl KeyText="程序集名称"
                                                            ValueText="{Binding ScheduleInfo.AsmName}"></control:SimpleKeyValueControl>
-                            <control:SimpleKeyValueControl KeyText="类型"
+                                <control:SimpleKeyValueControl KeyText="类型"
                                                            ValueText="{Binding ScheduleInfo.IsGeneralJob ,Converter={StaticResource Bool2StringConverter},ConverterParameter=周期运行|延时运行}"></control:SimpleKeyValueControl>
-                            <control:SimpleKeyValueControl KeyText="是否立即"
+                                <control:SimpleKeyValueControl KeyText="是否立即"
                                                            ValueText="{Binding ScheduleInfo.IsToRunNow,Converter={StaticResource Bool2StringConverter}}"></control:SimpleKeyValueControl>
-                            <control:SimpleKeyValueControl KeyText="时间单位"
+                                <control:SimpleKeyValueControl KeyText="时间单位"
                                                            ValueText="{Binding ScheduleInfo.Type}"></control:SimpleKeyValueControl>
-                            <control:SimpleKeyValueControl KeyText="小时值"
+                                <control:SimpleKeyValueControl KeyText="小时值"
                                                            ValueText="{Binding ScheduleInfo.Hour}"></control:SimpleKeyValueControl>
-                            <control:SimpleKeyValueControl KeyText="分钟值"
+                                <control:SimpleKeyValueControl KeyText="分钟值"
                                                            ValueText="{Binding ScheduleInfo.Minute}"></control:SimpleKeyValueControl>
-                            <control:SimpleKeyValueControl KeyText="其他值"
+                                <control:SimpleKeyValueControl KeyText="其他值"
                                                            ValueText="{Binding ScheduleInfo.Value}"></control:SimpleKeyValueControl>
-                        </WrapPanel>
+                            </StackPanel>
+                        </Grid>
                     </GroupBox>
                     <GroupBox Header="输出" Grid.Row="1">
                         <ScrollViewer>
