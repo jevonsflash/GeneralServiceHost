@@ -12,13 +12,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using GeneralServiceHost.ViewModel;
+using MahApps.Metro.Controls;
 
 namespace GeneralServiceHost.View
 {
     /// <summary>
     /// AddJobWindow.xaml 的交互逻辑
     /// </summary>
-    public partial class AddJobWindow : Window
+    public partial class AddJobWindow : MetroWindow
     {
         public AddJobWindow()
         {

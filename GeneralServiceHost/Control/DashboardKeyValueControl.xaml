@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GeneralServiceHost.Control"
              mc:Ignorable="d"
-             Background="LightGray"
+             Background="WhiteSmoke"
              Height="100" 
              Width="100">
     <Grid>
@@ -21,14 +21,13 @@
                HorizontalContentAlignment="Left"
                x:Name="KeyLabel"
                Grid.Row="0"></Label>
-        <Label Content="2015-k"
+        <TextBlock Text="N/A"
+			   TextWrapping="Wrap"
                FontSize="22"
                VerticalAlignment="Center"
-               HorizontalAlignment="Center"
-               VerticalContentAlignment="Center"
-               HorizontalContentAlignment="Center"
+               HorizontalAlignment="Center"               
                x:Name="ValueLabel"
-               Grid.Row="1"></Label>
+               Grid.Row="1"></TextBlock>
         <Label Content=""
                Margin="12,0"
                HorizontalAlignment="Right"

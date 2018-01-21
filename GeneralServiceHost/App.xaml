@@ -14,6 +14,8 @@
             <converter1:Bool2VisibilityConverter x:Key="Bool2VisibilityConverter"></converter1:Bool2VisibilityConverter>
             <converter1:Bool2StringConverter x:Key="Bool2StringConverter"></converter1:Bool2StringConverter>
             <converter1:JobStatus2ColorConverter x:Key="JobStatus2ColorConverter"></converter1:JobStatus2ColorConverter>
+            <converter1:JobStatus2StringConverter x:Key="JobStatus2StringConverter"></converter1:JobStatus2StringConverter>
+            <converter1:Date2StringConverter x:Key="Date2StringConverter"></converter1:Date2StringConverter>
 
             <system:Double x:Key="LargeFontSize">32</system:Double>
 

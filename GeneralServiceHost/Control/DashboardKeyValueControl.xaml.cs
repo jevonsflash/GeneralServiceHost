@@ -61,7 +61,7 @@ namespace GeneralServiceHost.Control
         {
             var dashboardKeyValueControl = d as DashboardKeyValueControl;
             if (dashboardKeyValueControl != null)
-                dashboardKeyValueControl.ValueLabel.Content = dashboardKeyValueControl.ValueText;
+                dashboardKeyValueControl.ValueLabel.Text = dashboardKeyValueControl.ValueText;
         }
 
         public string ValueText

@@ -9,6 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
+
 
 namespace GeneralServiceHost.Manager
 {
@@ -78,16 +81,22 @@ namespace GeneralServiceHost.Manager
         /// 开始Job操作
         /// </summary>
         /// <param name="name"></param>
-        public static void Start(string name)
+        public async static void Start(string name)
         {
             var currentJobInfo = DataManager.Current.JobInfos.First(c => c.Name == name);
             if (currentJobInfo.Status == JobStatusType.Stop)
             {
                 JobManager.GetSchedule(name).Enable();
+                JobInfoManager.Refresh();
 
             }
             else if (currentJobInfo.Status == JobStatusType.Obsolete)
             {
+                var clickresult = await DialogManager.ShowMessageAsync(Application.Current.MainWindow as MetroWindow, "务已经过期", "是否重新建立新的任务（保持原设置）", MessageDialogStyle.AffirmativeAndNegative);
+                if (clickresult == MessageDialogResult.Negative)
+                {
+                    return;
+                }
                 JobInfoManager.RemoveJob(currentJobInfo);
 
                 var isSuccess = RunSchedule(currentJobInfo.ScheduleInfo);
@@ -97,6 +106,8 @@ namespace GeneralServiceHost.Manager
                     if (isCreateJobSuccess)
                     {
                         MessageBox.Show("任务启用成功");
+                        JobInfoManager.Refresh();
+
 
                     }
                     else
@@ -104,7 +115,6 @@ namespace GeneralServiceHost.Manager
                         MessageBox.Show("任务启用失败");
 
                     }
-                    JobInfoManager.Refresh();
                 }
                 else
                 {
@@ -117,7 +127,6 @@ namespace GeneralServiceHost.Manager
                 MessageBox.Show("任务已经在启用状态");
 
             }
-            Refresh();
         }
 
         /// <summary>

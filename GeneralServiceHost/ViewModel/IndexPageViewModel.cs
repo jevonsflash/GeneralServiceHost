@@ -96,6 +96,26 @@ namespace GeneralServiceHost.ViewModel
             }
         }
 
+        private Dictionary<string,string> _statusTypes;
+
+        public Dictionary<string, string> StatusTypes
+        {
+            get
+            {
+                var result = new Dictionary<string, string>
+                {
+                    { "过期", "Gray" },
+                    { "挂起", "Gold" },
+                    { "正在执行", "Green" },
+                    { "暂停", "Red" },
+                    { "未指定", "Purple" }
+                };
+
+                return result;
+            }
+           
+        }
+
 
         public RelayCommand RefreshCommand { get; set; }
         public RelayCommand<string> StartCommand { get; set; }

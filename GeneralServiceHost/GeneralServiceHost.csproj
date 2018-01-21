@@ -111,7 +111,9 @@
     </Compile>
     <Compile Include="Converter\Bool2StringConverter.cs" />
     <Compile Include="Converter\Bool2VisibilityConverter.cs" />
+    <Compile Include="Converter\Date2StringConverter.cs" />
     <Compile Include="Converter\JobStatus2ColorConverter.cs" />
+    <Compile Include="Converter\JobStatus2StringConverter.cs" />
     <Compile Include="Helper\FileHelper.cs" />
     <Compile Include="Manager\DataManager.cs" />
     <Compile Include="Manager\JobInfoManager.cs" />

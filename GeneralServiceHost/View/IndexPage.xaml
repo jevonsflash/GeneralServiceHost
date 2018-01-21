@@ -14,7 +14,7 @@
     <Grid>
         <Grid>
             <Grid.RowDefinitions>
-                <RowDefinition Height="60"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition Height="1*"></RowDefinition>
                 <RowDefinition Height="30"></RowDefinition>
             </Grid.RowDefinitions>
@@ -24,43 +24,66 @@
                     <ColumnDefinition Width="3*"></ColumnDefinition>
                     <ColumnDefinition Width="9*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <ListView SelectedItem="{Binding SelectedJobInfo}"     
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1*"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <ListView SelectedItem="{Binding SelectedJobInfo}"     
                           ItemsSource="{Binding Source={StaticResource  DataManager }, Path=Current.JobInfos}"
                           x:Name="JobList">
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition></RowDefinition>
-                                    <RowDefinition></RowDefinition>
-                                </Grid.RowDefinitions>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="15"></ColumnDefinition>
-                                    <ColumnDefinition></ColumnDefinition>
-                                </Grid.ColumnDefinitions>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition></RowDefinition>
+                                        <RowDefinition></RowDefinition>
+                                    </Grid.RowDefinitions>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="15"></ColumnDefinition>
+                                        <ColumnDefinition></ColumnDefinition>
+                                    </Grid.ColumnDefinitions>
 
-                                <Rectangle Grid.Column="0"
+                                    <Rectangle Grid.Column="0"
                                            Grid.RowSpan="2"
                                            Fill="{Binding Status, Converter={StaticResource JobStatus2ColorConverter}}"
                                            >
 
-                                </Rectangle>
+                                    </Rectangle>
 
 
-                                <StackPanel Grid.RowSpan="2"
+                                    <StackPanel Grid.RowSpan="2"
                                             Grid.Column="1">
-                                    <TextBlock Text="{Binding Name}"
+                                        <TextBlock Text="{Binding Name}"
                                                FontSize="{StaticResource LargeFontSize}"></TextBlock>
 
-                                    <control:SimpleKeyValueControl KeyText="下次执行时间"
-                                                                   ValueText="{Binding NextRun}" ContentStringFormat="MM-dd hh:mm:ss"></control:SimpleKeyValueControl>
+                                        <control:SimpleKeyValueControl KeyText="下次运行"
+                                                                   ValueText="{Binding NextRun ,Converter={StaticResource Date2StringConverter}}"></control:SimpleKeyValueControl>
 
+                                    </StackPanel>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+
+                    </ListView>
+                    <ItemsControl Grid.Row="1" ItemsSource="{Binding StatusTypes}" >
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <WrapPanel IsItemsHost="True" Orientation="Horizontal"></WrapPanel>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" Margin="2,10">
+
+                                    <Rectangle Height="10" Width="10" Fill="{Binding Value}"></Rectangle>
+                                    <TextBlock Text="{Binding Key}"></TextBlock>
                                 </StackPanel>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-
-                </ListView>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
                 <Grid Grid.Column="1"
                             DataContext="{Binding SelectedJobInfo}">
                     <Grid.RowDefinitions>
@@ -75,19 +98,17 @@
                                 <ColumnDefinition Width="3*"></ColumnDefinition>
                             </Grid.ColumnDefinitions>
                             <WrapPanel Orientation="Horizontal">
-                                
-                                <control:DashboardKeyValueControl KeyText="距下次运行"
+                                <control:DashboardKeyValueControl KeyText="下次运行" 
                                                                   Margin="5"
-                                                                  ValueText="{Binding NextRun}" UnitText="小时"></control:DashboardKeyValueControl>
-                                <control:DashboardKeyValueControl KeyText="下次运行时间" 
-                                                                  Margin="5"
-                                                                  ValueText="{Binding NextRun ,StringFormat=}"></control:DashboardKeyValueControl>
+                                                                  ValueText="{Binding NextRun, Converter={StaticResource Date2StringConverter}}" >
+
+                                </control:DashboardKeyValueControl>
                                 <control:DashboardKeyValueControl KeyText="当前状态"
                                                                   Margin="5"
-                                                                  ValueText="{Binding Status}"></control:DashboardKeyValueControl>
-                                <control:DashboardKeyValueControl KeyText="最后运行时间" 
+                                                                  ValueText="{Binding Status, Converter={StaticResource JobStatus2StringConverter}}"></control:DashboardKeyValueControl>
+                                <control:DashboardKeyValueControl KeyText="最后运行" 
                                                                   Margin="5"
-                                                                  ValueText="{Binding LastRun}"></control:DashboardKeyValueControl>
+                                                                  ValueText="{Binding LastRun, Converter={StaticResource Date2StringConverter}}"></control:DashboardKeyValueControl>
                                 <control:DashboardKeyValueControl KeyText="已运行" 
                                                                   Margin="5"
                                                                   ValueText="{Binding RunCount}"  UnitText="次"></control:DashboardKeyValueControl>
@@ -133,26 +154,36 @@
             </Grid>
 
             <StackPanel Grid.Row="0"
+                        Margin="5"
                         Orientation="Horizontal"
                         HorizontalAlignment="Left">
                 <Button Content="添加任务"
-                        Width="150"
+                        Margin="0,0,10,0"
+                        Width="120"
+                        Height="45"
                         Click="ButtonBase_OnClick"></Button>
                 <Button Content="刷新"
-                        Width="150"
+                        Width="120"
+                        Height="45"
                         Command="{Binding RefreshCommand}"></Button>
             </StackPanel>
 
             <StackPanel Grid.Row="0"
+                        Margin="5"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">
                 <Button Content="开始"
+                        Margin="0,0,10,0"
                         Command="{Binding StartCommand}"
-                        Width="150"></Button>
+                        Width="120"
+                        Height="45"
+                        ></Button>
 
                 <Button Content="终止"
+                        Margin="0,0,10,0"
                         Command="{Binding AbortCommand}"
-                        Width="150"></Button>
+                        Width="120"                       
+                        Height="45"></Button>
             </StackPanel>
             <Grid Grid.Row="2">
                 <StackPanel Grid.Row="0"

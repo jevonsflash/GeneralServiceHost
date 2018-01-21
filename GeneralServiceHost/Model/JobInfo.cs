@@ -59,7 +59,7 @@ namespace GeneralServiceHost.Model
             }
             set
             {
-                _nextRun = value;
+                _lastRun = value;
                 RaisePropertyChanged(nameof(LastRun));
             }
         }
