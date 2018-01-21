@@ -1,5 +1,7 @@
 ﻿<controls:MetroWindow x:Class="GeneralServiceHost.MainWindow"
 					  ResizeMode="CanResizeWithGrip"
+					  BorderThickness="1"
+					  GlowBrush="#7F7F7F"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"

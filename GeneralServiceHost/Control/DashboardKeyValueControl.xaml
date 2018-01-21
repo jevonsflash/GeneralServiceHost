@@ -23,7 +23,7 @@
                Grid.Row="0"></Label>
         <TextBlock Text="N/A"
 			   TextWrapping="Wrap"
-               FontSize="22"
+               FontSize="{StaticResource LargeFontSize}"
                VerticalAlignment="Center"
                HorizontalAlignment="Center"               
                x:Name="ValueLabel"

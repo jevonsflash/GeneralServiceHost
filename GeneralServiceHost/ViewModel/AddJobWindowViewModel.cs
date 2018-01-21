@@ -13,6 +13,8 @@ namespace GeneralServiceHost.ViewModel
 {
     public class AddJobWindowViewModel : ViewModelBase
     {
+
+        private const int COR_E_ASSEMBLYEXPECTED = -2146234344;
         public AddJobWindowViewModel()
         {
             this.SetCommand = new RelayCommand(SetAction);
@@ -42,8 +44,6 @@ namespace GeneralServiceHost.ViewModel
             if (Asm != null)
             {
                 this.ScheduleInfo.Name = Asm.GetName().Name;
-                MessageBox.Show("加载程序集完成");
-
             }
 
         }
@@ -121,10 +121,21 @@ namespace GeneralServiceHost.ViewModel
             if (dialog.ShowDialog() == true)
             {
                 var exe = dialog.FileName;
-
-                Asm = Assembly.LoadFrom(exe);
-
+                try
+                {
+                    Asm = Assembly.LoadFrom(exe);
+                }
+            catch (BadImageFormatException ex)
+            {
+                int errorCode = System.Runtime.InteropServices.Marshal.GetHRForException(ex);
+                if (errorCode == COR_E_ASSEMBLYEXPECTED)
+                {
+                    MessageBox.Show("此exe文件无法在当前的Windows中运行");
+                }
             }
+
+
+        }
         }
 
 

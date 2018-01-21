@@ -55,6 +55,7 @@
                                     <StackPanel Grid.RowSpan="2"
                                             Grid.Column="1">
                                         <TextBlock Text="{Binding Name}"
+                                                   Margin="5,0"
                                                FontSize="{StaticResource LargeFontSize}"></TextBlock>
 
                                         <control:SimpleKeyValueControl KeyText="下次运行"
