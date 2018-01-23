@@ -111,6 +111,7 @@
     <Compile Include="Common\ConsoleManager.cs" />
     <Compile Include="Common\GeneralServiceRegistry.cs" />
     <Compile Include="Common\OutputArgs.cs" />
+    <Compile Include="Common\DisplayManger.cs" />
     <Compile Include="Common\WindowWrapper.cs" />
     <Compile Include="Control\DashboardKeyValueControl.xaml.cs">
       <DependentUpon>DashboardKeyValueControl.xaml</DependentUpon>
@@ -121,18 +122,28 @@
     <Compile Include="Converter\Bool2StringConverter.cs" />
     <Compile Include="Converter\Bool2VisibilityConverter.cs" />
     <Compile Include="Converter\Date2StringConverter.cs" />
+    <Compile Include="Converter\Enum2StringConverter.cs" />
     <Compile Include="Converter\JobStatus2ColorConverter.cs" />
     <Compile Include="Converter\JobStatus2StringConverter.cs" />
+    <Compile Include="Converter\DayOfWeek2StringConverter.cs" />
+    <Compile Include="Converter\ScheduleType2StringConverter.cs" />
     <Compile Include="Helper\FileHelper.cs" />
     <Compile Include="Manager\DataManager.cs" />
     <Compile Include="Manager\JobInfoManager.cs" />
     <Compile Include="Manager\OutputManager.cs" />
     <Compile Include="Manager\ProcessManager.cs" />
+    <Compile Include="Model\ByDayInfo.cs" />
+    <Compile Include="Model\ByHourInfo.cs" />
+    <Compile Include="Model\ByMinuteInfo.cs" />
+    <Compile Include="Model\ByMonthInfo.cs" />
+    <Compile Include="Model\BySpecifiedInfo.cs" />
+    <Compile Include="Model\ByWeekInfo.cs" />
     <Compile Include="Model\JobInfo.cs" />
     <Compile Include="Model\JobStatusType.cs" />
     <Compile Include="Model\ProcessResult.cs" />
     <Compile Include="Model\ScheduleInfo.cs" />
     <Compile Include="Model\ScheduleType.cs" />
+    <Compile Include="Model\WeekOfMonthType.cs" />
     <Compile Include="ViewModel\AddJobWindowViewModel.cs" />
     <Compile Include="ViewModel\IndexPageViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />

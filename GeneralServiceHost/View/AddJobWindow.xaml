@@ -4,6 +4,7 @@
                       BorderThickness="1"
                       GlowBrush="#7F7F7F"
                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      DataContext="{Binding Source={StaticResource Locator},Path= AddJobWindow}"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -12,7 +13,7 @@
         mc:Ignorable="d"
         Title="添加任务"
         Width="420"
-        Height="600">
+        >
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"></RowDefinition>
@@ -39,6 +40,10 @@
         <GroupBox Grid.Row="1"
                   Header="计划设置">
             <StackPanel>
+                <StackPanel>
+                    <Label Content="名称"></Label>
+                    <TextBox Text="{Binding ScheduleInfo.Name ,Mode=TwoWay}"></TextBox>
+                </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <RadioButton Content="周期任务"
                                  GroupName="1"
@@ -47,23 +52,20 @@
                                  GroupName="1" />
                 </StackPanel>
                 <StackPanel>
-                    <Label Content="名称"></Label>
-                    <TextBox Text="{Binding ScheduleInfo.Name ,Mode=TwoWay}"></TextBox>
-                </StackPanel>
-                <StackPanel Visibility="{Binding   ScheduleInfo.IsGeneralJob ,Converter={StaticResource Bool2VisibilityConverter}}">
-                    <Label Content="时间参数"></Label>
-                    <controls:TimePicker SelectedTime="{Binding ScheduleInfo.Time,Mode=TwoWay}"></controls:TimePicker>
-                </StackPanel>
-                <StackPanel>
                     <Label Content="时间单位"></Label>
                     <ComboBox ItemsSource="{Binding Source={StaticResource ScheduleTypeDataSource}}"
-                              SelectedItem="{Binding ScheduleInfo.Type ,Mode=TwoWay}"></ComboBox>
+                              SelectionChanged="ComboBox_Selected"
+                              SelectedItem="{Binding ScheduleInfo.Type ,Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource ScheduleType2StringConverter}}"></TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
                 </StackPanel>
-                <StackPanel>
-                    <Label Content="其他值"></Label>
-                    <controls:NumericUpDown Value="{Binding ScheduleInfo.Value,Mode=TwoWay}"></controls:NumericUpDown>
-                </StackPanel>
-                <StackPanel Visibility="{Binding   ScheduleInfo.IsGeneralJob ,Converter={StaticResource Bool2VisibilityConverter}}">
+                <Control Name="CC"></Control>
+
+                <StackPanel >
                     <CheckBox Content="是否立即运行"
                               IsChecked="{Binding ScheduleInfo.IsToRunNow ,Mode=TwoWay}"></CheckBox>
                 </StackPanel>

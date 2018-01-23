@@ -11,29 +11,6 @@
              xmlns:manager="clr-namespace:GeneralServiceHost.Manager">
     <Application.Resources>
         <ResourceDictionary>
-            <converter1:Bool2VisibilityConverter x:Key="Bool2VisibilityConverter"></converter1:Bool2VisibilityConverter>
-            <converter1:Bool2StringConverter x:Key="Bool2StringConverter"></converter1:Bool2StringConverter>
-            <converter1:JobStatus2ColorConverter x:Key="JobStatus2ColorConverter"></converter1:JobStatus2ColorConverter>
-            <converter1:JobStatus2StringConverter x:Key="JobStatus2StringConverter"></converter1:JobStatus2StringConverter>
-            <converter1:Date2StringConverter x:Key="Date2StringConverter"></converter1:Date2StringConverter>
-
-            <system:Double x:Key="LargeFontSize">22</system:Double>
-
-            <system:Double x:Key="SmailFontSize">18</system:Double>
-            <vm:ViewModelLocator x:Key="Locator"
-                                 d:IsDataSource="True"
-                                 xmlns:vm="clr-namespace:GeneralServiceHost.ViewModel" />
-            <manager:DataManager x:Key="DataManager"
-                                 d:IsDataSource="True"
-                                  />
-            <ObjectDataProvider x:Key="ScheduleTypeDataSource"
-                                MethodName="GetValues"
-                                ObjectType="{x:Type system:Enum}">
-                <ObjectDataProvider.MethodParameters>
-                    <x:Type Type="model:ScheduleType" />
-                </ObjectDataProvider.MethodParameters>
-            </ObjectDataProvider>
-
 
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
@@ -41,7 +18,7 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Steel.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
-                <ResourceDictionary Source=" Style/PageSkinDictionary.xaml"></ResourceDictionary>
+                <ResourceDictionary Source="Style/PageSkinDictionary.xaml"></ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
 
 

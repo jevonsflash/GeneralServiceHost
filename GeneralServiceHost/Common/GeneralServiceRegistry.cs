@@ -20,131 +20,281 @@ namespace GeneralServiceHost.Common
             NonReentrantAsDefault();
         }
 
-        public void SetAndRegistryGeneralService<T>(ScheduleInfo scheduleInfo) where T : IJob
+        public void SetAndRegistryGeneralService(ScheduleInfo scheduleInfo, Action<ScheduleInfo> action)
         {
+            var isToRunNow = scheduleInfo.IsToRunNow;
+            var name = scheduleInfo.Name;
+            switch (scheduleInfo.Type)
+            {
+                case ScheduleType.Day:
+                    var bydaycontext = scheduleInfo.ByDay;
 
-            if (scheduleInfo.IsToRunNow)
-            {
-                switch (scheduleInfo.Type)
-                {
-                    case ScheduleType.Day:
-                        Schedule<T>().NonReentrant().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Days().At(scheduleInfo.Hour, scheduleInfo.Minute);
-                        break;
-                    case ScheduleType.Hour:
-                        Schedule<T>().NonReentrant().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Hours().At(scheduleInfo.Minute);
-                        break;
-                    case ScheduleType.Week:
-                        Schedule<T>().NonReentrant().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Weeks().On(CastDayOfWeek(scheduleInfo.Value)).At(scheduleInfo.Hour, scheduleInfo.Minute);
-                        break;
-                    case ScheduleType.Month:
-                        Schedule<T>().NonReentrant().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Months().On(scheduleInfo.Value).At(scheduleInfo.Hour, scheduleInfo.Minute);
-                        break;
-                    default:
-                        break;
-                }
-            }
-            else
-            {
-                switch (scheduleInfo.Type)
-                {
-                    case ScheduleType.Day:
-                        Schedule<T>().NonReentrant().WithName(scheduleInfo.Name).ToRunEvery(1).Days().At(scheduleInfo.Hour, scheduleInfo.Minute);
-                        break;
-                    case ScheduleType.Hour:
-                        Schedule<T>().NonReentrant().WithName(scheduleInfo.Name).ToRunEvery(1).Hours().At(scheduleInfo.Minute);
-                        break;
-                    case ScheduleType.Week:
-                        Schedule<T>().NonReentrant().WithName(scheduleInfo.Name).ToRunEvery(1).Weeks().On(CastDayOfWeek(scheduleInfo.Value)).At(scheduleInfo.Hour, scheduleInfo.Minute);
-                        break;
-                    case ScheduleType.Month:
-                        Schedule<T>().NonReentrant().WithName(scheduleInfo.Name).ToRunEvery(1).Months().On(scheduleInfo.Value).At(scheduleInfo.Hour, scheduleInfo.Minute);
-                        break;
-                    default:
-                        break;
-                }
+                    if (bydaycontext != null && !string.IsNullOrEmpty(name))
+                    {
+
+                        if (isToRunNow)
+                        {
+                            Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunNow()
+                                .AndEvery(bydaycontext.Value).Days().At(bydaycontext.Hour, bydaycontext.Minute);
+
+                        }
+                        else
+                        {
+                            Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name)
+                                .ToRunEvery(bydaycontext.Value).Days().At(bydaycontext.Hour, bydaycontext.Minute);
+
+                        }
+
+                    }
+                    break;
+                case ScheduleType.Hour:
+                    var byhourcontext = scheduleInfo.ByDay;
+
+                    if (byhourcontext != null && !string.IsNullOrEmpty(name))
+                    {
+                        if (isToRunNow)
+                        {
+                            Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunNow()
+                                .AndEvery(byhourcontext.Value).Hours().At(byhourcontext.Minute);
+
+                        }
+                        else
+                        {
+                            Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name)
+                                .ToRunEvery(byhourcontext.Value).Hours().At(byhourcontext.Minute);
+
+                        }
+                    }
+
+                    break;
+                case ScheduleType.Week:
+                    var byweekcontext = scheduleInfo.ByWeek;
+
+                    if (byweekcontext != null && !string.IsNullOrEmpty(name))
+                    {
+                        if (isToRunNow)
+                        {
+                            Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunNow()
+                                .AndEvery(byweekcontext.Value).Weeks()
+                                .On(byweekcontext.Dayofweek).At(byweekcontext.Hour, byweekcontext.Minute);
+
+
+                        }
+                        else
+                        {
+                            Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name)
+                                .ToRunEvery(byweekcontext.Value).Weeks()
+                                .On(byweekcontext.Dayofweek).At(byweekcontext.Hour, byweekcontext.Minute);
+
+                        }
+                    }
+
+                    break;
+                case ScheduleType.Month:
+                    var bymonthcontext = scheduleInfo.ByMonth;
+                    if (bymonthcontext != null && !string.IsNullOrEmpty(name))
+                    {
+                        if (bymonthcontext.IsMonthByweek)
+                        {
+                            switch (bymonthcontext.WeekOfMonth)
+                            {
+                                case WeekOfMonthType.第一个星期:
+                                    if (isToRunNow)
+                                    {
+                                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunNow().AndEvery(bymonthcontext.Value).Months().OnTheFirst(bymonthcontext.Dayofweek).At(bymonthcontext.Hour, bymonthcontext.Minute);
+                                    }
+                                    else
+                                    {
+                                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunEvery(bymonthcontext.Value).Months().OnTheFirst(bymonthcontext.Dayofweek).At(bymonthcontext.Hour, bymonthcontext.Minute);
+                                    }
+                                    break;
+                                case WeekOfMonthType.第二个星期:
+                                    if (isToRunNow)
+                                    {
+                                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunNow().AndEvery(bymonthcontext.Value).Months().OnTheSecond(bymonthcontext.Dayofweek).At(bymonthcontext.Hour, bymonthcontext.Minute);
+                                    }
+                                    else
+                                    {
+                                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunEvery(bymonthcontext.Value).Months().OnTheSecond(bymonthcontext.Dayofweek).At(bymonthcontext.Hour, bymonthcontext.Minute);
+                                    }
+                                    break;
+                                case WeekOfMonthType.第三个星期:
+                                    if (isToRunNow)
+                                    {
+                                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunNow().AndEvery(bymonthcontext.Value).Months().OnTheThird(bymonthcontext.Dayofweek).At(bymonthcontext.Hour, bymonthcontext.Minute);
+                                    }
+                                    else
+                                    {
+                                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunEvery(bymonthcontext.Value).Months().OnTheThird(bymonthcontext.Dayofweek).At(bymonthcontext.Hour, bymonthcontext.Minute);
+                                    }
+                                    break;
+                                case WeekOfMonthType.第四个星期:
+                                    if (isToRunNow)
+                                    {
+                                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunNow().AndEvery(bymonthcontext.Value).Months().OnTheFourth(bymonthcontext.Dayofweek).At(bymonthcontext.Hour, bymonthcontext.Minute);
+                                    }
+                                    else
+                                    {
+                                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunEvery(bymonthcontext.Value).Months().OnTheFourth(bymonthcontext.Dayofweek).At(bymonthcontext.Hour, bymonthcontext.Minute);
+                                    }
+                                    break;
+                                case WeekOfMonthType.最后一个星期:
+                                    if (isToRunNow)
+                                    {
+                                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunNow().AndEvery(bymonthcontext.Value).Months().OnTheLast(bymonthcontext.Dayofweek).At(bymonthcontext.Hour, bymonthcontext.Minute);
+                                    }
+                                    else
+                                    {
+                                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunEvery(bymonthcontext.Value).Months().OnTheLast(bymonthcontext.Dayofweek).At(bymonthcontext.Hour, bymonthcontext.Minute);
+                                    }
+                                    break;
+                                default:
+                                    throw new ArgumentOutOfRangeException();
+                            }
+
+                        }
+                        else
+                        {
+                            if (bymonthcontext.OnDay > 0)
+                            {
+                                Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunNow().AndEvery(bymonthcontext.Value).Months().On(bymonthcontext.OnDay).At(bymonthcontext.Hour, bymonthcontext.Minute);
+
+                            }
+                            else
+                            {
+                                Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunNow().AndEvery(bymonthcontext.Value).Months().OnTheLastDay().At(bymonthcontext.Hour, bymonthcontext.Minute);
+
+                            }
+
+
+                        }
+
+                    }
+                    break;
+
+                case ScheduleType.Minute:
+                    var byminutecontext = scheduleInfo.ByMinute;
+
+                    if (byminutecontext != null && !string.IsNullOrEmpty(name))
+                    {
+                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunNow()
+                            .AndEvery(byminutecontext.Value).Minutes();
+                    }
+                    break;
+                default:
+                    break;
 
             }
         }
 
         public void SetAndRegistryDelayService(ScheduleInfo scheduleInfo, Action<ScheduleInfo> action)
         {
-
-            switch (scheduleInfo.Type)
-            {
-
-                case ScheduleType.Minute:
-                    Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunOnceIn(scheduleInfo.Value).Minutes();
-                    break;
-                case ScheduleType.Day:
-                    Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunOnceIn(scheduleInfo.Value).Days();
-
-                    break;
-                case ScheduleType.Hour:
-                    Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunOnceIn(scheduleInfo.Value).Hours();
-
-                    break;
-                case ScheduleType.Week:
-                    Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunOnceIn(scheduleInfo.Value).Weeks();
-
-                    break;
-                case ScheduleType.Month:
-                    Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunOnceIn(scheduleInfo.Value).Months();
-
-                    break;
-                default:
-                    break;
-            }
-
-        }
-
-        public void SetAndRegistryGeneralService(ScheduleInfo scheduleInfo, Action<ScheduleInfo> action)
-        {
-
             if (scheduleInfo.IsToRunNow)
             {
-                switch (scheduleInfo.Type)
-                {
-                    case ScheduleType.Minute:
-                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Minutes();
-                        break;
-                    case ScheduleType.Day:
-                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Days().At(scheduleInfo.Hour, scheduleInfo.Minute);
-                        break;
-                    case ScheduleType.Hour:
-                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Hours().At(scheduleInfo.Minute);
-                        break;
-                    case ScheduleType.Week:
-                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Weeks().On(CastDayOfWeek(scheduleInfo.Value)).At(scheduleInfo.Hour, scheduleInfo.Minute);
-                        break;
-                    case ScheduleType.Month:
-                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunNow().AndEvery(1).Months().On(scheduleInfo.Value).At(scheduleInfo.Hour, scheduleInfo.Minute);
-                        break;
-                    default:
-                        break;
-                }
-            }
-            else
-            {
+                var name = scheduleInfo.Name;
                 switch (scheduleInfo.Type)
                 {
                     case ScheduleType.Day:
-                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunEvery(1).Days().At(scheduleInfo.Hour, scheduleInfo.Minute);
-                        break;
-                    case ScheduleType.Hour:
-                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunEvery(1).Hours().At(scheduleInfo.Minute);
-                        break;
-                    case ScheduleType.Week:
-                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunEvery(1).Weeks().On(CastDayOfWeek(scheduleInfo.Value)).At(scheduleInfo.Hour, scheduleInfo.Minute);
-                        break;
-                    case ScheduleType.Month:
-                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(scheduleInfo.Name).ToRunEvery(1).Months().On(scheduleInfo.Value).At(scheduleInfo.Hour, scheduleInfo.Minute);
-                        break;
-                    default:
-                        break;
-                }
+                        var bydaycontext = scheduleInfo.ByDay;
 
+                        if (bydaycontext != null && !string.IsNullOrEmpty(name))
+                        {
+                            Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name)
+                                .ToRunOnceIn(bydaycontext.Value).Days().At(bydaycontext.Hour, bydaycontext.Minute);
+                        }
+                        break;
+                    case ScheduleType.Hour:
+                        var byhourcontext = scheduleInfo.ByDay;
+
+                        if (byhourcontext != null && !string.IsNullOrEmpty(name))
+                        {
+                            Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name)
+                                .ToRunOnceIn(byhourcontext.Value).Hours().At(byhourcontext.Minute);
+                        }
+
+                        break;
+                    case ScheduleType.Week:
+                        var byweekcontext = scheduleInfo.ByWeek;
+
+                        if (byweekcontext != null && !string.IsNullOrEmpty(name))
+                        {
+                            Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name)
+                                .ToRunOnceIn(byweekcontext.Value).Weeks()
+                                .On(byweekcontext.Dayofweek).At(byweekcontext.Hour, byweekcontext.Minute);
+                        }
+
+                        break;
+                    case ScheduleType.Month:
+                        var bymonthcontext = scheduleInfo.ByMonth;
+                        if (bymonthcontext != null && !string.IsNullOrEmpty(name))
+                        {
+                            if (bymonthcontext.IsMonthByweek)
+                            {
+                                switch (bymonthcontext.WeekOfMonth)
+                                {
+                                    case WeekOfMonthType.第一个星期:
+                                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunOnceIn(bymonthcontext.Value).Months().OnTheFirst(bymonthcontext.Dayofweek).At(bymonthcontext.Hour, bymonthcontext.Minute);
+                                        break;
+                                    case WeekOfMonthType.第二个星期:
+                                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunOnceIn(bymonthcontext.Value).Months().OnTheSecond(bymonthcontext.Dayofweek).At(bymonthcontext.Hour, bymonthcontext.Minute);
+                                        break;
+                                    case WeekOfMonthType.第三个星期:
+                                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunOnceIn(bymonthcontext.Value).Months().OnTheThird(bymonthcontext.Dayofweek).At(bymonthcontext.Hour, bymonthcontext.Minute);
+                                        break;
+                                    case WeekOfMonthType.第四个星期:
+                                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunOnceIn(bymonthcontext.Value).Months().OnTheFourth(bymonthcontext.Dayofweek).At(bymonthcontext.Hour, bymonthcontext.Minute);
+                                        break;
+                                    case WeekOfMonthType.最后一个星期:
+                                        Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunOnceIn(bymonthcontext.Value).Months().OnTheLast(bymonthcontext.Dayofweek).At(bymonthcontext.Hour, bymonthcontext.Minute);
+                                        break;
+                                    default:
+                                        throw new ArgumentOutOfRangeException();
+                                }
+
+                            }
+                            else
+                            {
+                                if (bymonthcontext.OnDay > 0)
+                                {
+                                    Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunOnceIn(bymonthcontext.Value).Months().On(bymonthcontext.OnDay).At(bymonthcontext.Hour, bymonthcontext.Minute);
+                                }
+                                else
+                                {
+                                    Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunOnceIn(bymonthcontext.Value).Months().OnTheLastDay().At(bymonthcontext.Hour, bymonthcontext.Minute);
+
+                                }
+                            }
+
+                        }
+                        break;
+
+                    case ScheduleType.Minute:
+                        var byminutecontext = scheduleInfo.ByMinute;
+
+                        if (byminutecontext != null && !string.IsNullOrEmpty(name))
+                        {
+                            Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name)
+                                .ToRunOnceIn(byminutecontext.Value).Minutes();
+                        }
+                        break;
+                    case ScheduleType.Specified:
+                        var byspecifiedcontext = scheduleInfo.BySpecified;
+
+                        if (byspecifiedcontext != null && !string.IsNullOrEmpty(name))
+                        {
+                            Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name)
+                                .ToRunOnceAt(byspecifiedcontext.Time);
+                        }
+
+                        break;
+
+                    default:
+                        break;
+                }
             }
+
         }
+
 
         private static Action Job(ScheduleInfo scheduleInfo, Action<ScheduleInfo> action)
         {
@@ -155,37 +305,6 @@ namespace GeneralServiceHost.Common
         }
 
 
-        private DayOfWeek CastDayOfWeek(int value)
-        {
-            var result = DayOfWeek.Monday;
-            switch (value)
-            {
-                case 1:
-                    result = DayOfWeek.Monday;
-                    break;
-                case 2:
-                    result = DayOfWeek.Tuesday;
-                    break;
-                case 3:
-                    result = DayOfWeek.Wednesday;
-                    break;
-                case 4:
-                    result = DayOfWeek.Thursday;
-                    break;
-                case 5:
-                    result = DayOfWeek.Friday;
-                    break;
-                case 6:
-                    result = DayOfWeek.Saturday;
-                    break;
-                case 7:
-                    result = DayOfWeek.Sunday;
-                    break;
-                default:
-                    break;
-            }
-            return result;
-        }
 
 
     }

@@ -14,6 +14,13 @@ namespace GeneralServiceHost.Model
         {
             this.IsGeneralJob = true;
             this.IsGuard = false;
+            this.ByMinute = new ByMinuteInfo();
+            this.ByHour = new ByHourInfo();
+            this.ByDay = new ByDayInfo();
+            this.ByWeek = new ByWeekInfo();
+            this.ByMonth = new ByMonthInfo();
+            this.BySpecified=new BySpecifiedInfo();
+            
         }
         private string _name;
 
@@ -50,36 +57,93 @@ namespace GeneralServiceHost.Model
             }
         }
 
+        private ByMonthInfo _byMonth;
 
-        private TimeSpan _time;
-
-        public TimeSpan Time
+        public ByMonthInfo ByMonth
         {
-            get { return _time; }
+            get { return _byMonth; }
             set
             {
-                _time = value;
-                RaisePropertyChanged(nameof(Time));
+                _byMonth = value;
+                RaisePropertyChanged();
             }
         }
-        public int Hour
-        {
-            get { return Time.Hours; }
-        }
-        public int Minute
-        {
-            get { return Time.Minutes; }
-        }
 
-        private int _value;
+        private ByWeekInfo _byWeek;
 
-        public int Value
+        public ByWeekInfo ByWeek
         {
-            get { return _value; }
+            get { return _byWeek; }
             set
             {
-                _value = value;
-                RaisePropertyChanged(nameof(Value));
+                _byWeek = value;
+                RaisePropertyChanged();
+
+            }
+        }
+
+        private ByDayInfo _byDay;
+
+        public ByDayInfo ByDay
+        {
+            get { return _byDay; }
+            set
+            {
+                _byDay = value;
+                RaisePropertyChanged();
+            }
+        }
+
+        private ByHourInfo _byHour;
+
+        public ByHourInfo ByHour
+        {
+            get { return _byHour; }
+            set
+            {
+                _byHour = value;
+
+                RaisePropertyChanged();
+            }
+        }
+
+        private ByMinuteInfo _byMinute;
+
+        public ByMinuteInfo ByMinute
+        {
+            get { return _byMinute; }
+            set
+            {
+                _byMinute = value;
+                RaisePropertyChanged();
+
+            }
+        }
+
+        private BySpecifiedInfo _bySpecified;
+
+        public BySpecifiedInfo BySpecified
+        {
+            get { return _bySpecified; }
+            set
+            {
+                _bySpecified = value;
+                RaisePropertyChanged();
+
+            }
+        }
+
+
+
+        private int _delayFor;
+
+        public int DelayFor
+        {
+            get { return _delayFor; }
+            set
+            {
+                _delayFor = value;
+                RaisePropertyChanged();
             }
         }
 

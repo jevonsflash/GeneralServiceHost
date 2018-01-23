@@ -6,9 +6,13 @@ using System.Threading.Tasks;
 
 namespace GeneralServiceHost.Model
 {
-    public enum ScheduleType
+    public enum WeekOfMonthType
     {
-        Hour, Day, Month, Week,
-        Minute, Specified
+        第一个星期=0,
+        第二个星期=1,
+        第三个星期=2,
+        第四个星期=3,
+        最后一个星期=4,
+
     }
 }
