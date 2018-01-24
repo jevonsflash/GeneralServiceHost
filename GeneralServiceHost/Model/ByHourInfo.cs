@@ -9,6 +9,12 @@ namespace GeneralServiceHost.Model
 {
     public class ByHourInfo:ViewModelBase
     {
+        public ByHourInfo()
+        {
+            this.Value = 1;
+            this.OnMinute = 59;
+        }
+
         private int _value;
 
         public int Value
@@ -38,7 +44,7 @@ namespace GeneralServiceHost.Model
             get
             {
                 var result = new Dictionary<int, string>();
-                for (int i = 1; i <= 59; i++)
+                for (int i = 0; i <= 59; i++)
                 {
                     var current = i.ToString();
                     result.Add(i, current);

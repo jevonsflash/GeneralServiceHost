@@ -149,13 +149,28 @@ namespace GeneralServiceHost.Manager
         /// <param name="name"></param>
         public static void Dorp(string name)
         {
-            if (DataManager.Current.JobInfos.First(c => c.Name == name).Status == JobStatusType.Pending)
+            var currentJob = DataManager.Current.JobInfos.First(c => c.Name == name);
+            if (currentJob.Status == JobStatusType.Pending)
             {
 
                 JobManager.RemoveJob(name);
+                var result = JobInfoManager.RemoveJob(currentJob);
+                if (result)
+                {
+                    MessageBox.Show("任务删除成功");
+                }
+            }
+            else if (currentJob.Status == JobStatusType.Obsolete)
+            {
+                var result = JobInfoManager.RemoveJob(currentJob);
+                if (result)
+                {
+                    MessageBox.Show("任务删除成功");
+                }
 
             }
             Refresh();
+
         }
 
 
@@ -290,9 +305,9 @@ namespace GeneralServiceHost.Manager
         }
 
         /// <summary>
-        /// yichu
+        /// 移除任务
         /// </summary>
-        /// <param name="ScheduleInfo"></param>
+        /// <param name="currentJobInfo"></param>
         /// <returns></returns>
         public static bool RemoveJob(JobInfo currentJobInfo)
         {
@@ -300,7 +315,6 @@ namespace GeneralServiceHost.Manager
             return result;
 
         }
-
         /// <summary>
         /// 运行程序异常
         /// </summary>

@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using FluentScheduler;
 using GeneralServiceHost.Manager;
+using GeneralServiceHost.Model;
 using Schedule = FluentScheduler.Schedule;
 
 namespace GeneralServiceHost.View
@@ -34,6 +35,18 @@ namespace GeneralServiceHost.View
         {
             var addJobWindow = new AddJobWindow();
             addJobWindow.ShowDialog();
+        }
+
+        private void FrameworkElement_OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {
+            var cuurentJob = ((JobInfo) e.NewValue);
+            if (cuurentJob != null)
+            {
+                var current = cuurentJob.ScheduleInfo.Type.ToString() + "BoardTemplate";
+                this.ScheduleBoard.Template = FindResource(current) as ControlTemplate;
+
+            }
+
         }
     }
 }

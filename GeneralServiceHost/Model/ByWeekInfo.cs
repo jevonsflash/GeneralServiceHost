@@ -12,7 +12,8 @@ namespace GeneralServiceHost.Model
         public ByWeekInfo()
         {
             Time = DateTime.Now;
-
+            this.Value = 1;
+            this.Dayofweek = DayOfWeek.Monday;
         }
 
         private int _value;

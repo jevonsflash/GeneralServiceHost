@@ -12,6 +12,7 @@ namespace GeneralServiceHost.Model
         public ByDayInfo()
         {
             Time = DateTime.Now;
+            this.Value = 1;
         }
 
         private int _value;

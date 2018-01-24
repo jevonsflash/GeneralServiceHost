@@ -27,11 +27,13 @@ namespace GeneralServiceHost.ViewModel
             this.RefreshCommand = new RelayCommand(RefreshAction);
             this.StartCommand = new RelayCommand<string>(StartAction);
             this.AbortCommand = new RelayCommand<string>(AbortAction);
+            this.RemoveCommand = new RelayCommand<string>(RemoveAction);
             this.PropertyChanged += IndexPageViewModel_PropertyChanged;
             DataManager.Current.ReadFinishedEvent += Current_ReadFinishedEvent;
             DataManager.Current.Read();
 
         }
+
 
         private async void IndexPageViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -56,6 +58,16 @@ namespace GeneralServiceHost.ViewModel
         private void Current_ReadFinishedEvent(object sender, EventArgs e)
         {
             JobInfoManager.Refresh();
+        }
+
+        private void RemoveAction(string obj)
+        {
+            if (this.SelectedJobInfo != null)
+            {
+                
+                JobInfoManager.Dorp(SelectedJobInfo.Name);
+
+            }
         }
 
         private void RefreshAction()
@@ -120,6 +132,7 @@ namespace GeneralServiceHost.ViewModel
         public RelayCommand RefreshCommand { get; set; }
         public RelayCommand<string> StartCommand { get; set; }
         public RelayCommand<string> AbortCommand { get; set; }
+        public RelayCommand<string> RemoveCommand { get; set; }
 
 
     }

@@ -12,6 +12,10 @@ namespace GeneralServiceHost.Model
         public ByMonthInfo()
         {
             Time = DateTime.Now;
+            this.Value = 1;
+            this.OnDay = 1;
+            this.Dayofweek = DayOfWeek.Monday;
+            this.WeekOfMonth = WeekOfMonthType.第一个星期;
 
         }
         private int _value;
@@ -26,7 +30,7 @@ namespace GeneralServiceHost.Model
             }
         }
 
-        
+
         private bool _isMonthByweek;
 
         public bool IsMonthByweek
@@ -91,19 +95,22 @@ namespace GeneralServiceHost.Model
         public int OnDay
         {
             get { return _onDay; }
-            set { _onDay = value;
+            set
+            {
+                _onDay = value;
                 RaisePropertyChanged();
             }
         }
 
-        public Dictionary<int, string> DayList {
+        public Dictionary<int, string> DayList
+        {
             get
             {
-                var result= new Dictionary<int, string>();
+                var result = new Dictionary<int, string>();
                 for (int i = 1; i <= 31; i++)
                 {
                     var current = i + "日";
-                    result.Add(i,current);
+                    result.Add(i, current);
                 }
                 result.Add(-1, "最后一天");
                 return result;

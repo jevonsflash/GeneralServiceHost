@@ -12,8 +12,17 @@ namespace GeneralServiceHost.Converter
 	{
 		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
 		{
-			return DatetimeToString((DateTime) value);
-		}
+		    if (parameter==null || !bool.Parse(parameter.ToString()))
+		    {
+		        return DatetimeToString((DateTime) value);
+
+		    }
+		    else
+		    {
+                var sdate = (DateTime) value;
+		        return  sdate.ToString("hh:mm");
+            }
+        }
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
 		{

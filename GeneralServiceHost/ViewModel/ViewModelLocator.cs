@@ -24,7 +24,8 @@ namespace GeneralServiceHost.ViewModel
 
         public static void Cleanup()
         {
-            
+            SimpleIoc.Default.Unregister<AddJobWindowViewModel>();
+            SimpleIoc.Default.Register<AddJobWindowViewModel>();
         }
     }
 }

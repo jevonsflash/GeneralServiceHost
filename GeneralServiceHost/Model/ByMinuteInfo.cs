@@ -9,6 +9,11 @@ namespace GeneralServiceHost.Model
 {
     public class ByMinuteInfo: ViewModelBase
     {
+        public ByMinuteInfo()
+        {
+            this.Value = 1;
+        }
+
         private int _value;
 
         public int Value

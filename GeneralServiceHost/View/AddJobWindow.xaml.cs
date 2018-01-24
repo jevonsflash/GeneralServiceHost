@@ -24,6 +24,12 @@ namespace GeneralServiceHost.View
         public AddJobWindow()
         {
             InitializeComponent();
+            Closed += AddJobWindow_Closed;
+        }
+
+        private void AddJobWindow_Closed(object sender, EventArgs e)
+        {
+            ViewModelLocator.Cleanup();
         }
 
         private void ComboBox_Selected(object sender, SelectionChangedEventArgs e)

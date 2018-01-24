@@ -189,8 +189,6 @@ namespace GeneralServiceHost.Common
 
         public void SetAndRegistryDelayService(ScheduleInfo scheduleInfo, Action<ScheduleInfo> action)
         {
-            if (scheduleInfo.IsToRunNow)
-            {
                 var name = scheduleInfo.Name;
                 switch (scheduleInfo.Type)
                 {
@@ -291,7 +289,7 @@ namespace GeneralServiceHost.Common
                     default:
                         break;
                 }
-            }
+            
 
         }
 
