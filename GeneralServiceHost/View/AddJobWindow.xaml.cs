@@ -37,7 +37,16 @@ namespace GeneralServiceHost.View
             var current = (sender as ComboBox).SelectedItem.ToString() + "Template";
             if (this.CC != null)
             {
-                this.CC.Template = FindResource(current) as ControlTemplate;
+                try
+                {
+                    this.CC.Template = FindResource(current) as ControlTemplate;
+
+                }
+                catch (Exception)
+                {
+
+                    this.CC.Template = null;
+                }
 
             }
 

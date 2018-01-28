@@ -20,6 +20,7 @@
     <converter1:DayOfWeek2StringConverter x:Key="DayOfWeek2StringConverter"></converter1:DayOfWeek2StringConverter>
     <converter1:Enum2StringConverter x:Key="Enum2StringConverter"></converter1:Enum2StringConverter>
     <converter1:ScheduleType2StringConverter x:Key="ScheduleType2StringConverter"></converter1:ScheduleType2StringConverter>
+    <converter1:True2FalseConverter x:Key="True2FalseConverter"></converter1:True2FalseConverter>
 
     <system:Double x:Key="LargeFontSize">22</system:Double>
 
@@ -59,87 +60,90 @@
 
     </ObjectDataProvider>
     <ControlTemplate x:Key="HourTemplate">
-        <StackPanel DataContext="{Binding ScheduleInfo.ByHour}">
-            <Label Content="按小时"></Label>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="每" VerticalAlignment="Center"></TextBlock>
-                <controls:NumericUpDown Value="{Binding Value,Mode=TwoWay}" Minimum="1" Maximum="499"></controls:NumericUpDown>
-                <TextBlock Text="小时" VerticalAlignment="Center"></TextBlock>
+        <StackPanel DataContext="{Binding ScheduleInfo}" Margin="0,0">
+            <Label Content="按小时执行"></Label>
+            <StackPanel Orientation="Vertical">
+                <Label Content="{Binding IsGeneralJob ,Converter={StaticResource Bool2StringConverter} ,ConverterParameter=每几小时执行|几小时之后执行}"  VerticalAlignment="Center"></Label>
+                <controls:NumericUpDown TextAlignment="Left" Value="{Binding ByHour.Value,Mode=TwoWay}" Minimum="1" Maximum="499"></controls:NumericUpDown>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="的" VerticalAlignment="Center"></TextBlock>
-                <ComboBox ItemsSource="{Binding MinuteList}"
-                                  SelectedValue="{Binding OnMinute}" DisplayMemberPath="Value" SelectedValuePath="Key" ></ComboBox>
-                <TextBlock Text="分" VerticalAlignment="Center"></TextBlock>
+            <StackPanel Orientation="Vertical">
+                <Label Content="的" VerticalAlignment="Center"></Label>
+                <ComboBox ItemsSource="{Binding ByHour.MinuteList}"
+                                  SelectedValue="{Binding ByHour.OnMinute}" DisplayMemberPath="Value" SelectedValuePath="Key" ></ComboBox>
+                <Label Content="分" VerticalAlignment="Center"></Label>
 
             </StackPanel>
         </StackPanel>
     </ControlTemplate>
     <ControlTemplate x:Key="MinuteTemplate">
-
-        <StackPanel DataContext="{Binding ScheduleInfo.ByMinute}">
+        <StackPanel DataContext="{Binding ScheduleInfo}" Margin="0,0">
             <Label Content="按分执行"></Label>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="每" VerticalAlignment="Center"></TextBlock>
-                <controls:NumericUpDown Value="{Binding Value,Mode=TwoWay}" Minimum="1" Maximum="499"></controls:NumericUpDown>
-                <TextBlock Text="分" VerticalAlignment="Center"></TextBlock>
+            <StackPanel Orientation="Vertical">
+                <Label Content="{Binding IsGeneralJob ,Converter={StaticResource Bool2StringConverter} ,ConverterParameter=每几分钟执行|几分钟之后执行}"  VerticalAlignment="Center"></Label>
+                <controls:NumericUpDown TextAlignment="Left" Value="{Binding ByMinute.Value,Mode=TwoWay}" Minimum="1" Maximum="499"></controls:NumericUpDown>
             </StackPanel>
         </StackPanel>
     </ControlTemplate>
     <ControlTemplate x:Key="MonthTemplate">
-        <StackPanel DataContext="{Binding ScheduleInfo.ByMonth}">
+        <StackPanel DataContext="{Binding ScheduleInfo}" Margin="0,0">
             <Label Content="按月执行"></Label>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="每" VerticalAlignment="Center"></TextBlock>
-                <controls:NumericUpDown Value="{Binding Value,Mode=TwoWay}" Minimum="1" Maximum="12"></controls:NumericUpDown>
-                <TextBlock Text="个月" VerticalAlignment="Center"></TextBlock>
+            <StackPanel Orientation="Vertical">
+                <Label Content="{Binding IsGeneralJob ,Converter={StaticResource Bool2StringConverter} ,ConverterParameter=每几个月执行|几个月之后执行}"  VerticalAlignment="Center"></Label>
+                <controls:NumericUpDown TextAlignment="Left"  Value="{Binding ByMonth.Value,Mode=TwoWay}" Minimum="1" Maximum="12"></controls:NumericUpDown>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <RadioButton VerticalAlignment="Center"
                                      GroupName="2"
-                                     IsChecked="{Binding IsMonthByweek,Mode=TwoWay}" />
-                <TextBlock Text="的" VerticalAlignment="Center"></TextBlock>
-                <ComboBox ItemsSource="{Binding Source={StaticResource WeekOfMonthDataSource}}"
-                              SelectedItem="{Binding  WeekOfMonth ,Mode=TwoWay}"></ComboBox>
-                <TextBlock Text="的" VerticalAlignment="Center"></TextBlock>
-                <ComboBox ItemsSource="{Binding Source={StaticResource DayOfWeekDataSource}}"
-                              SelectedItem="{Binding Dayofweek ,Mode=TwoWay}" >
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Converter={StaticResource DayOfWeek2StringConverter}}"></TextBlock>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                                     IsChecked="{Binding ByMonth.IsMonthByweek,Mode=TwoWay}" />
+
+                <StackPanel Orientation="Vertical" IsEnabled="{Binding ByMonth.IsMonthByweek}">
+
+                    <Label Content="在" VerticalAlignment="Center"></Label>
+                    <ComboBox ItemsSource="{Binding Source={StaticResource WeekOfMonthDataSource}}"
+                              SelectedItem="{Binding  ByMonth.WeekOfMonth ,Mode=TwoWay}"></ComboBox>
+                    <Label Content="的" VerticalAlignment="Center"></Label>
+                    <ComboBox ItemsSource="{Binding Source={StaticResource DayOfWeekDataSource}}"
+                              SelectedItem="{Binding ByMonth.Dayofweek ,Mode=TwoWay}" >
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Converter={StaticResource DayOfWeek2StringConverter}}"></TextBlock>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                </StackPanel>
 
             </StackPanel>
             <StackPanel Orientation="Horizontal">
                 <RadioButton VerticalAlignment="Center"
                                      GroupName="2" />
-                <TextBlock Text="的" VerticalAlignment="Center"></TextBlock>
-                <ComboBox ItemsSource="{Binding DayList}"
-                                  SelectedValue="{Binding OnDay ,Mode=TwoWay}" DisplayMemberPath="Value" SelectedValuePath="Key" ></ComboBox>
+                <StackPanel Orientation="Vertical" IsEnabled="{Binding ByMonth.IsMonthByweek ,Converter={StaticResource True2FalseConverter }}">
+                    <Label Content="的" VerticalAlignment="Center"></Label>
+                    <ComboBox ItemsSource="{Binding ByMonth.DayList}"
+                                  SelectedValue="{Binding ByMonth.OnDay ,Mode=TwoWay}" DisplayMemberPath="Value" SelectedValuePath="Key" ></ComboBox>
+
+                </StackPanel>
 
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="在" VerticalAlignment="Center"></TextBlock>
-                <controls:TimePicker SelectedTime="{Binding Time,Mode=TwoWay}"></controls:TimePicker>
+            <StackPanel Orientation="Vertical">
+                <Label Content="在" VerticalAlignment="Center"></Label>
+                <controls:TimePicker SelectedTime="{Binding ByMonth.Time,Mode=TwoWay}"></controls:TimePicker>
 
             </StackPanel>
 
         </StackPanel>
     </ControlTemplate>
     <ControlTemplate x:Key="WeekTemplate">
-        <StackPanel DataContext="{Binding ScheduleInfo.ByWeek}">
+        <StackPanel DataContext="{Binding ScheduleInfo}" Margin="0,0">
             <Label Content="按星期执行"></Label>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="每" VerticalAlignment="Center"></TextBlock>
-                <controls:NumericUpDown Value="{Binding Value,Mode=TwoWay}" Minimum="1" Maximum="99"></controls:NumericUpDown>
-                <TextBlock Text="星期" VerticalAlignment="Center"></TextBlock>
+            <StackPanel Orientation="Vertical">
+                <Label Content="{Binding IsGeneralJob ,Converter={StaticResource Bool2StringConverter} ,ConverterParameter=每几星期执行|几星期之后执行}"  VerticalAlignment="Center"></Label>
+                <controls:NumericUpDown TextAlignment="Left" Value="{Binding ByWeek.Value,Mode=TwoWay}" Minimum="1" Maximum="99"></controls:NumericUpDown>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="的" VerticalAlignment="Center"></TextBlock>
+            <StackPanel Orientation="Vertical">
+                <Label Content="的" VerticalAlignment="Center"></Label>
                 <ComboBox ItemsSource="{Binding Source={StaticResource DayOfWeekDataSource}}"
-                              SelectedItem="{Binding Dayofweek ,Mode=TwoWay}">
+                              SelectedItem="{Binding ByWeek.Dayofweek ,Mode=TwoWay}">
                     <ComboBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Converter={StaticResource DayOfWeek2StringConverter}}"></TextBlock>
@@ -148,45 +152,42 @@
                 </ComboBox>
 
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="在" VerticalAlignment="Center"></TextBlock>
-                <controls:TimePicker SelectedTime="{Binding Time,Mode=TwoWay}"></controls:TimePicker>
+            <StackPanel Orientation="Vertical">
+                <Label Content="在" VerticalAlignment="Center"></Label>
+                <controls:TimePicker SelectedTime="{Binding ByWeek.Time,Mode=TwoWay}"></controls:TimePicker>
 
             </StackPanel>
 
         </StackPanel>
     </ControlTemplate>
     <ControlTemplate x:Key="DayTemplate">
-        <StackPanel DataContext="{Binding ScheduleInfo.ByDay}">
+        <StackPanel DataContext="{Binding ScheduleInfo}" Margin="0,0">
             <Label Content="按天执行"></Label>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="每" VerticalAlignment="Center"></TextBlock>
-                <controls:NumericUpDown Value="{Binding Value,Mode=TwoWay}" Minimum="1" Maximum="364"></controls:NumericUpDown>
-                <TextBlock Text="天" VerticalAlignment="Center"></TextBlock>
+            <StackPanel Orientation="Vertical">
+                <Label Content="{Binding IsGeneralJob ,Converter={StaticResource Bool2StringConverter} ,ConverterParameter=每几天执行|几天之后执行}"  VerticalAlignment="Center"></Label>
+                <controls:NumericUpDown TextAlignment="Left" Value="{Binding ByDay.Value,Mode=TwoWay}" Minimum="1" Maximum="364"></controls:NumericUpDown>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="在" VerticalAlignment="Center"></TextBlock>
-                <controls:TimePicker SelectedTime="{Binding Time,Mode=TwoWay}"></controls:TimePicker>
-
+            <StackPanel Orientation="Vertical">
+                <Label Content="在" VerticalAlignment="Center"></Label>
+                <controls:TimePicker SelectedTime="{Binding ByDay.Time,Mode=TwoWay}"></controls:TimePicker>
             </StackPanel>
         </StackPanel>
     </ControlTemplate>
     <ControlTemplate x:Key="SpecifiedTemplate">
-        <StackPanel DataContext="{Binding ScheduleInfo.BySpecified}">
+        <StackPanel DataContext="{Binding ScheduleInfo}" Margin="0,0">
             <Label Content="按计划时间执行"></Label>
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="在" VerticalAlignment="Center"></TextBlock>
-                <controls:DateTimePicker SelectedDate="{Binding Time,Mode=TwoWay}"></controls:DateTimePicker>
+            <StackPanel Orientation="Vertical">
+                <Label Content="在" VerticalAlignment="Center"></Label>
+                <controls:DateTimePicker SelectedDate="{Binding BySpecified.Time,Mode=TwoWay}"></controls:DateTimePicker>
             </StackPanel>
         </StackPanel>
     </ControlTemplate>
 
 
     <ControlTemplate x:Key="MinuteBoardTemplate">
-        <StackPanel>
-
+        <StackPanel DataContext="{Binding ScheduleInfo}">
             <control:SimpleKeyValueControl KeyText="在"
-                                           ValueText="{Binding ScheduleInfo.ByMinute.Value}" UnitText="分钟"></control:SimpleKeyValueControl>
+                                           ValueText="{Binding ByMinute.Value}" UnitText="分钟"></control:SimpleKeyValueControl>
         </StackPanel>
     </ControlTemplate>
 

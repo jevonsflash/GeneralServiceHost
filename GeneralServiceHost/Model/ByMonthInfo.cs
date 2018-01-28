@@ -16,6 +16,7 @@ namespace GeneralServiceHost.Model
             this.OnDay = 1;
             this.Dayofweek = DayOfWeek.Monday;
             this.WeekOfMonth = WeekOfMonthType.第一个星期;
+            this.IsMonthByweek = true;
 
         }
         private int _value;

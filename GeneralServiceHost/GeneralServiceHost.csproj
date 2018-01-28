@@ -127,6 +127,7 @@
     <Compile Include="Converter\JobStatus2StringConverter.cs" />
     <Compile Include="Converter\DayOfWeek2StringConverter.cs" />
     <Compile Include="Converter\ScheduleType2StringConverter.cs" />
+    <Compile Include="Converter\True2FalseConverter.cs" />
     <Compile Include="Helper\FileHelper.cs" />
     <Compile Include="Manager\DataManager.cs" />
     <Compile Include="Manager\JobInfoManager.cs" />

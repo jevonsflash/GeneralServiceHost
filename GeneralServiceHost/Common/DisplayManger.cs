@@ -101,6 +101,9 @@ namespace GeneralServiceHost.Common
                 case ScheduleType.Specified:
                     result = "按计划时间";
                     break;
+                case ScheduleType.Unspecified:
+                    result = "--请选择--";
+                    break;
             }
 
             return result;

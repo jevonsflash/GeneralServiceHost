@@ -19,8 +19,9 @@ namespace GeneralServiceHost.Model
             this.ByDay = new ByDayInfo();
             this.ByWeek = new ByWeekInfo();
             this.ByMonth = new ByMonthInfo();
-            this.BySpecified=new BySpecifiedInfo();
-            
+            this.BySpecified = new BySpecifiedInfo();
+            this.Type = ScheduleType.Unspecified;
+
         }
         private string _name;
 

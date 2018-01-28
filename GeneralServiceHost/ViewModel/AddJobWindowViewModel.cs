@@ -48,27 +48,47 @@ namespace GeneralServiceHost.ViewModel
 
         }
 
+        private bool ValidateSchedule()
+        {
+            if (string.IsNullOrEmpty(this.ScheduleInfo.AsmPath))
+            {
+                MessageBox.Show("信息不完整,请选择文件");
+                return false;
+
+            }
+            if (this.ScheduleInfo.Type == ScheduleType.Unspecified)
+            {
+                MessageBox.Show("信息不完整,请选择时间单位");
+                return false;
+            }
+            return true;
+        }
+
         private void SetAction()
         {
-            var isSuccess = JobInfoManager.RunSchedule(this.ScheduleInfo);
-            if (isSuccess)
+            if (ValidateSchedule())
             {
-                var isCreateJobSuccess= JobInfoManager.CreateJob(this.ScheduleInfo);
-                if (isCreateJobSuccess)
+                var isSuccess = JobInfoManager.RunSchedule(this.ScheduleInfo);
+                if (isSuccess)
                 {
-                    MessageBox.Show("任务启用成功");
+                    var isCreateJobSuccess = JobInfoManager.CreateJob(this.ScheduleInfo);
+                    if (isCreateJobSuccess)
+                    {
+                        MessageBox.Show("任务启用成功");
 
+                    }
+                    else
+                    {
+                        MessageBox.Show("任务启用失败");
+
+                    }
+                    JobInfoManager.Refresh();
                 }
                 else
                 {
                     MessageBox.Show("任务启用失败");
-
                 }
-                JobInfoManager.Refresh();
-            }
-            else
-            {
-                MessageBox.Show("任务启用失败");
+
             }
 
         }
@@ -125,17 +145,17 @@ namespace GeneralServiceHost.ViewModel
                 {
                     Asm = Assembly.LoadFrom(exe);
                 }
-            catch (BadImageFormatException ex)
-            {
-                int errorCode = System.Runtime.InteropServices.Marshal.GetHRForException(ex);
-                if (errorCode == COR_E_ASSEMBLYEXPECTED)
+                catch (BadImageFormatException ex)
                 {
-                    MessageBox.Show("此exe文件无法在当前的Windows中运行");
+                    int errorCode = System.Runtime.InteropServices.Marshal.GetHRForException(ex);
+                    if (errorCode == COR_E_ASSEMBLYEXPECTED)
+                    {
+                        MessageBox.Show("此exe文件无法在当前的Windows中运行");
+                    }
                 }
+
+
             }
-
-
-        }
         }
 
 

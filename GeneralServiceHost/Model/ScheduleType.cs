@@ -8,7 +8,12 @@ namespace GeneralServiceHost.Model
 {
     public enum ScheduleType
     {
-        Hour, Day, Month, Week,
-        Minute, Specified
+        Unspecified, //未指定
+        Minute,//按分钟
+        Hour,//按小时
+        Day,//按天
+        Week,//按星期
+        Month,//按月
+        Specified//指定时间
     }
 }
