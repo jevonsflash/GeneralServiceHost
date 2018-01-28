@@ -41,7 +41,9 @@ namespace GeneralServiceHost.ViewModel
             {
                 if (this.SelectedJobInfo.SbLog.Count == 0)
                 {
-                    var str = await OutputManager.ReadOutput(SelectedJobInfo.Name);
+                    var fileName = SelectedJobInfo.Name + ".log";
+
+                    var str = await OutputManager.ReadOutput(fileName);
 
                     if (!string.IsNullOrEmpty(str))
                     {

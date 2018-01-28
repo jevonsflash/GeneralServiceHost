@@ -140,12 +140,16 @@
                         </Grid>
                     </GroupBox>
                     <GroupBox Header="输出" Grid.Row="1">
-                        <ScrollViewer>
-                            <ItemsControl 
+                        <Grid>
+                            <ScrollViewer>
+                                <ItemsControl 
                             VirtualizingPanel.IsVirtualizing="True" 
                             VirtualizingPanel.VirtualizationMode="Recycling" 
                             ItemsSource="{Binding SbLog}"></ItemsControl>
-                        </ScrollViewer>
+                            </ScrollViewer>
+                            
+                            <Button Content="打开日志" Name="OpenFolder" Click="OpenFolder_OnClick"  HorizontalAlignment="Right" VerticalAlignment="Bottom"></Button>
+                        </Grid>
                     </GroupBox>
                 </Grid>
             </Grid>

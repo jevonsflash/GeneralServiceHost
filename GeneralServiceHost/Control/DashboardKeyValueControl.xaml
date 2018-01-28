@@ -5,34 +5,36 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:GeneralServiceHost.Control"
              mc:Ignorable="d"
-             Background="WhiteSmoke"
+             Background="#DDDDDD"
              Height="100" 
              Width="100">
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="1*"></RowDefinition>
-            <RowDefinition Height="Auto"></RowDefinition>
-        </Grid.RowDefinitions>
-        <Label Content="Key"
+    <Border CornerRadius="3" BorderThickness="1" BorderBrush="#CCCCCC">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="1*"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Label Content="Key"
                Margin="12,0"
                HorizontalAlignment="Left"
                
                HorizontalContentAlignment="Left"
                x:Name="KeyLabel"
                Grid.Row="0"></Label>
-        <TextBlock Text="N/A"
+            <TextBlock Text="N/A"
 			   TextWrapping="Wrap"
                FontSize="{StaticResource LargeFontSize}"
                VerticalAlignment="Center"
                HorizontalAlignment="Center"               
                x:Name="ValueLabel"
                Grid.Row="1"></TextBlock>
-        <Label Content=""
+            <Label Content=""
                Margin="12,0"
                HorizontalAlignment="Right"
                HorizontalContentAlignment="Right"
                x:Name="UnitLabel"
                Grid.Row="2"></Label>
-    </Grid>
+        </Grid>
+    </Border>
 </UserControl>

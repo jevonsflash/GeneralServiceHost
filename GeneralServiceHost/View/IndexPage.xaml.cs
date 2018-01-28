@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,6 +48,12 @@ namespace GeneralServiceHost.View
 
             }
 
+        }
+
+        private void OpenFolder_OnClick(object sender, RoutedEventArgs e)
+        {
+            string outputsPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Output");
+            Process.Start(outputsPath);
         }
     }
 }

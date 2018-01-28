@@ -343,7 +343,8 @@ namespace GeneralServiceHost.Manager
             {
                 log.Add(value);
             });
-            OutputManager.AppendOutput(name, value + "\n");
+            var fileName = name + ".log";
+            OutputManager.AppendOutput(fileName, value + "\n");
 
         }
 

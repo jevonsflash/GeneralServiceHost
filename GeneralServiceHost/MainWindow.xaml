@@ -1,7 +1,7 @@
 ﻿<controls:MetroWindow x:Class="GeneralServiceHost.MainWindow"
 					  ResizeMode="CanResizeWithGrip"
 					  BorderThickness="1"
-					  GlowBrush="#7F7F7F"
+					  GlowBrush="{DynamicResource AccentColorBrush}"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,6 +10,11 @@
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
         Title="GSH">
+    <controls:MetroWindow.RightWindowCommands>
+        <controls:WindowCommands>
+            <Button Content="关于" Click="ButtonBase_OnClick"></Button>
+        </controls:WindowCommands>
+    </controls:MetroWindow.RightWindowCommands>
     <Grid>
         <Frame x:Name="MainFrame"
                Source="../View/IndexPage.xaml"
