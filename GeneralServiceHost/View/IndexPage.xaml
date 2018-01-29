@@ -195,10 +195,20 @@
                 <StackPanel Grid.Row="0"
                         Orientation="Horizontal"
                         HorizontalAlignment="Left">
-                    <TextBlock Text="{Binding Source={StaticResource DataManager}, Path=Current.Current.Total}" ></TextBlock>
-                    <TextBlock Text="个任务中"></TextBlock>
-                    <TextBlock Text="{Binding Source={StaticResource DataManager}, Path=Current.Current.Obsolete}" ></TextBlock>
-                    <TextBlock Text="个已经过期"></TextBlock>
+                    <control:SimpleKeyValueControl KeyText="任务总数"
+                                                   ValueText="{Binding Source={StaticResource DataManager}, Path=Current.Total}"></control:SimpleKeyValueControl>
+
+                    <!--<control:SimpleKeyValueControl KeyText="过期"
+                                                   ValueText="{Binding Source={StaticResource DataManager}, Path=Current.Obsolete}"></control:SimpleKeyValueControl>
+
+                    <control:SimpleKeyValueControl KeyText="停止"
+                                                   ValueText="{Binding Source={StaticResource DataManager}, Path=Current.Stop}"></control:SimpleKeyValueControl>
+
+                    <control:SimpleKeyValueControl KeyText="挂起"
+                                                   ValueText="{Binding Source={StaticResource DataManager}, Path=Current.Pending}"></control:SimpleKeyValueControl>
+
+                    <control:SimpleKeyValueControl KeyText="正在执行"
+                                                   ValueText="{Binding Source={StaticResource DataManager}, Path=Current.Running}"></control:SimpleKeyValueControl>-->
                 </StackPanel>
 
             </Grid>
