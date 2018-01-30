@@ -4,6 +4,7 @@
 
 这是独立开发者的一个开源项目, 希望得到您的意见反馈，请将Bugs汇报至我的邮箱
 
+ ![avatar](https://raw.githubusercontent.com/jevonsflash/GeneralServiceHost/master/GSH/screenshot.png)
 ## 特点：
 
 * 指定一个可执行文件作为任务
@@ -16,7 +17,9 @@
 
 ## 安装说明：
 
-下载安装包并双击安装
+1. 下载安装包 https://raw.githubusercontent.com/jevonsflash/GeneralServiceHost/master/GSH/gsh.zip
+
+2. 解压并双击 setup.exe 安装
 
 ## 运行环境
 
