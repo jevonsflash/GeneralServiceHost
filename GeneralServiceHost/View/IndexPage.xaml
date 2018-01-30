@@ -173,14 +173,14 @@
                         Margin="5"
                         Orientation="Horizontal"
                         HorizontalAlignment="Right">
-                <Button Content="开始"
+                <Button Content="恢复"
                         Margin="0,0,10,0"
                         Command="{Binding StartCommand}"
                         Width="120"
                         Height="45"
                         ></Button>
 
-                <Button Content="终止"
+                <Button Content="停止"
                         Margin="0,0,10,0"
                         Command="{Binding AbortCommand}"
                         Width="120"                       
