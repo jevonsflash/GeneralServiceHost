@@ -23,10 +23,23 @@ namespace GeneralServiceHost.Manager
 
         public DataManager()
         {
+            this.PropertyChanged += DataManager_PropertyChanged;
             JobInfos = new ObservableCollection<JobInfo>();
             JobInfos.CollectionChanged += JobInfos_CollectionChanged;
             RunningJob = new List<string>();
 
+        }
+
+        private void DataManager_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(JobInfos))
+            {
+                this.Obsolete = this.JobInfos.Count(c => c.Status == JobStatusType.Obsolete);
+                this.Pending = this.JobInfos.Count(c => c.Status == JobStatusType.Pending);
+                this.Running = this.JobInfos.Count(c => c.Status == JobStatusType.Running);
+                this.Stop = this.JobInfos.Count(c => c.Status == JobStatusType.Stop);
+                this.Total = this.JobInfos.Count();
+            }
         }
 
         private async void ReadJobs()
@@ -76,7 +89,10 @@ namespace GeneralServiceHost.Manager
 
         private void JobInfos_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
-            this.Obsolete = this.JobInfos.Where(c => c.Status == JobStatusType.Obsolete).Count();
+            this.Obsolete = this.JobInfos.Count(c => c.Status == JobStatusType.Obsolete);
+            this.Pending = this.JobInfos.Count(c => c.Status == JobStatusType.Pending);
+            this.Running = this.JobInfos.Count(c => c.Status == JobStatusType.Running);
+            this.Stop = this.JobInfos.Count(c => c.Status == JobStatusType.Stop);
             this.Total = this.JobInfos.Count();
         }
 
@@ -108,13 +124,82 @@ namespace GeneralServiceHost.Manager
             {
                 _jobInfos = value;
 
-                base.RaisePropertyChanged(nameof(JobInfos));
+                base.RaisePropertyChanged();
             }
         }
 
-        public int Total { get; private set; }
+        private int _total;
+        public int Total
+        {
+            get
+            {
 
-        public int Obsolete { get; private set; }
+                return _total;
+            }
+
+            private set
+            {
+                _total = value;
+
+                base.RaisePropertyChanged();
+            }
+        }
+        private int _stop;
+
+        public int Stop
+        {
+            get { return _stop; }
+            private set
+            {
+                _stop = value;
+                base.RaisePropertyChanged();
+
+
+            }
+        }
+
+        private int _running;
+
+        public int Running
+        {
+            get { return _running; }
+            private set
+            {
+                _running = value;
+                base.RaisePropertyChanged();
+
+            }
+        }
+
+        private int _pending;
+
+        public int Pending
+        {
+            get { return _pending; }
+            private set
+            {
+                _pending = value;
+                base.RaisePropertyChanged();
+
+            }
+        }
+        private int _obsolete;
+
+        public int Obsolete
+        {
+            get
+            {
+
+                return _obsolete;
+            }
+
+            private set
+            {
+                _obsolete = value;
+
+                base.RaisePropertyChanged();
+            }
+        }
 
         private List<string> _runningJob;
 

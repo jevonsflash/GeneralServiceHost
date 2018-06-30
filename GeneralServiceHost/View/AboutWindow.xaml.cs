@@ -24,5 +24,10 @@ namespace GeneralServiceHost.View
         {
             InitializeComponent();
         }
+
+        private void Hyperlink_OnClick(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://github.com/jevonsflash/GeneralServiceHost");
+        }
     }
 }

@@ -33,7 +33,7 @@ namespace GeneralServiceHost
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
             var aboutWindow = new AboutWindow();
-            aboutWindow.Show();
+            aboutWindow.ShowDialog();
         }
     }
 }
