@@ -24,7 +24,7 @@
                     HorizontalAlignment="Center"
                     Margin="12,0">
             <TextBlock HorizontalAlignment="Center" Text="General Service Host" FontSize="{StaticResource LargeFontSize}"></TextBlock>
-            <TextBlock HorizontalAlignment="Center" Text="1.0.1" Margin="0,5"></TextBlock>
+            <TextBlock HorizontalAlignment="Center" Text="2.0" Margin="0,5"></TextBlock>
         </StackPanel>
         <StackPanel Grid.Row="1" 
                     Margin="12,0">
@@ -36,7 +36,7 @@
             <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
                 <Image Source="/timg.gif" Height="22" Width="22"></Image>
                 <TextBlock VerticalAlignment="Center">
-                    <Hyperlink Click="Hyperlink_OnClick" >https://github.com/jevonsflash/GeneralServiceHost</Hyperlink>
+                    <Hyperlink Click="Hyperlink_OnClick" >https://github.com/MatoApps/GeneralServiceHost</Hyperlink>
                 </TextBlock>
             </StackPanel>
         </StackPanel>
