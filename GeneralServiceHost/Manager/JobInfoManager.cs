@@ -365,7 +365,7 @@ namespace GeneralServiceHost.Manager
         {
             var sch = sender as ScheduleInfo;
             var processMgr = new ProcessManager(sch);
-            var result = processMgr.RunProcess(OutputAction, ContinueAction);
+            var result = processMgr.RunProcess(OutputAction, ErrorAction, ContinueAction);
             FinishJob(result);
         }
 
