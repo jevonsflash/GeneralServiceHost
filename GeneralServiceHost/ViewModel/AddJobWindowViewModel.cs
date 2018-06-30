@@ -4,6 +4,7 @@ using System.Reflection;
 using System.Windows;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
 using GeneralServiceHost.Common;
 using GeneralServiceHost.Manager;
 using GeneralServiceHost.Model;
@@ -19,10 +20,16 @@ namespace GeneralServiceHost.ViewModel
         {
             this.SetCommand = new RelayCommand(SetAction);
             UploadFileCommand = new RelayCommand(UploadFileAction);
-            this.ScheduleInfo = new ScheduleInfo() { Name = "程序集选择完成后显示" };
+            ContinuallyModeSelectedCommand = new RelayCommand(ContinuallyModeSelectedAction);
+            //this.ScheduleInfo = new ScheduleInfo() { Name = "程序集选择完成后显示" };
             this.PropertyChanged += AddJobWindowViewModel_PropertyChanged;
         }
 
+        private void ContinuallyModeSelectedAction()
+        {
+            this.ScheduleInfo.IsGuard = true;
+            this.ScheduleInfo.IsToRunNow = true;
+        }
 
         private void AddJobWindowViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -52,13 +59,14 @@ namespace GeneralServiceHost.ViewModel
         {
             if (string.IsNullOrEmpty(this.ScheduleInfo.AsmPath))
             {
-                MessageBox.Show("信息不完整,请选择文件");
+                MessageBox.Show("请指定要运行的程序", "信息不完整",MessageBoxButton.OK,MessageBoxImage.Information);
                 return false;
 
             }
-            if (this.ScheduleInfo.Type == ScheduleType.Unspecified)
+            if (this.ScheduleInfo.Mode != ScheduleMode.不间断任务 && this.ScheduleInfo.Type == ScheduleType.Unspecified)
             {
-                MessageBox.Show("信息不完整,请选择时间单位");
+                MessageBox.Show("请指定运行计划的时间", "信息不完整", MessageBoxButton.OK, MessageBoxImage.Information);
+
                 return false;
             }
             return true;
@@ -74,7 +82,9 @@ namespace GeneralServiceHost.ViewModel
                     var isCreateJobSuccess = JobInfoManager.CreateJob(this.ScheduleInfo);
                     if (isCreateJobSuccess)
                     {
-                        MessageBox.Show("任务启用成功");
+                        //MessageBox.Show("任务启用成功");
+                        Messenger.Default.Send<string>("", MessengerToken.CLOSEWINDOW);
+
 
                     }
                     else
@@ -94,6 +104,8 @@ namespace GeneralServiceHost.ViewModel
         }
 
         public RelayCommand SetCommand { get; set; }
+        public RelayCommand ContinuallyModeSelectedCommand { get; set; }
+
         public RelayCommand UploadFileCommand { get; set; }
 
         private Assembly _asm;

@@ -21,6 +21,9 @@
     <converter1:Enum2StringConverter x:Key="Enum2StringConverter"></converter1:Enum2StringConverter>
     <converter1:ScheduleType2StringConverter x:Key="ScheduleType2StringConverter"></converter1:ScheduleType2StringConverter>
     <converter1:True2FalseConverter x:Key="True2FalseConverter"></converter1:True2FalseConverter>
+    <converter1:JobStatus2BoolConverter x:Key="JobStatus2BoolConverter"></converter1:JobStatus2BoolConverter>
+    <converter1:ScheduleMode2BoolConverter x:Key="ScheduleMode2BoolConverter"></converter1:ScheduleMode2BoolConverter>
+    <converter1:ScheduleMode2StringConverter x:Key="ScheduleMode2StringConverter"></converter1:ScheduleMode2StringConverter>
 
     <system:Double x:Key="LargeFontSize">22</system:Double>
 
@@ -63,7 +66,7 @@
         <StackPanel DataContext="{Binding ScheduleInfo}" Margin="0,0">
             <Label Content="按小时执行"></Label>
             <StackPanel Orientation="Vertical">
-                <Label Content="{Binding IsGeneralJob ,Converter={StaticResource Bool2StringConverter} ,ConverterParameter=每几小时执行|几小时之后执行}"  VerticalAlignment="Center"></Label>
+                <Label Content="{Binding Mode ,Converter={StaticResource ScheduleMode2StringConverter} ,ConverterParameter=每几小时执行|几小时之后执行|}"  VerticalAlignment="Center"></Label>
                 <controls:NumericUpDown TextAlignment="Left" Value="{Binding ByHour.Value,Mode=TwoWay}" Minimum="1" Maximum="499"></controls:NumericUpDown>
             </StackPanel>
             <StackPanel Orientation="Vertical">
@@ -79,7 +82,7 @@
         <StackPanel DataContext="{Binding ScheduleInfo}" Margin="0,0">
             <Label Content="按分执行"></Label>
             <StackPanel Orientation="Vertical">
-                <Label Content="{Binding IsGeneralJob ,Converter={StaticResource Bool2StringConverter} ,ConverterParameter=每几分钟执行|几分钟之后执行}"  VerticalAlignment="Center"></Label>
+                <Label Content="{Binding Mode ,Converter={StaticResource ScheduleMode2StringConverter} ,ConverterParameter=每几分钟执行|几分钟之后执行|}"  VerticalAlignment="Center"></Label>
                 <controls:NumericUpDown TextAlignment="Left" Value="{Binding ByMinute.Value,Mode=TwoWay}" Minimum="1" Maximum="499"></controls:NumericUpDown>
             </StackPanel>
         </StackPanel>
@@ -88,7 +91,7 @@
         <StackPanel DataContext="{Binding ScheduleInfo}" Margin="0,0">
             <Label Content="按月执行"></Label>
             <StackPanel Orientation="Vertical">
-                <Label Content="{Binding IsGeneralJob ,Converter={StaticResource Bool2StringConverter} ,ConverterParameter=每几个月执行|几个月之后执行}"  VerticalAlignment="Center"></Label>
+                <Label Content="{Binding Mode ,Converter={StaticResource ScheduleMode2StringConverter} ,ConverterParameter=每几个月执行|几个月之后执行|}"  VerticalAlignment="Center"></Label>
                 <controls:NumericUpDown TextAlignment="Left"  Value="{Binding ByMonth.Value,Mode=TwoWay}" Minimum="1" Maximum="12"></controls:NumericUpDown>
             </StackPanel>
             <StackPanel Orientation="Horizontal">
@@ -137,7 +140,7 @@
         <StackPanel DataContext="{Binding ScheduleInfo}" Margin="0,0">
             <Label Content="按星期执行"></Label>
             <StackPanel Orientation="Vertical">
-                <Label Content="{Binding IsGeneralJob ,Converter={StaticResource Bool2StringConverter} ,ConverterParameter=每几星期执行|几星期之后执行}"  VerticalAlignment="Center"></Label>
+                <Label Content="{Binding Mode ,Converter={StaticResource ScheduleMode2StringConverter} ,ConverterParameter=每几星期执行|几星期之后执行|}"  VerticalAlignment="Center"></Label>
                 <controls:NumericUpDown TextAlignment="Left" Value="{Binding ByWeek.Value,Mode=TwoWay}" Minimum="1" Maximum="99"></controls:NumericUpDown>
             </StackPanel>
             <StackPanel Orientation="Vertical">
@@ -164,7 +167,7 @@
         <StackPanel DataContext="{Binding ScheduleInfo}" Margin="0,0">
             <Label Content="按天执行"></Label>
             <StackPanel Orientation="Vertical">
-                <Label Content="{Binding IsGeneralJob ,Converter={StaticResource Bool2StringConverter} ,ConverterParameter=每几天执行|几天之后执行}"  VerticalAlignment="Center"></Label>
+                <Label Content="{Binding Mode ,Converter={StaticResource ScheduleMode2StringConverter} ,ConverterParameter=每几天执行|几天之后执行|}"  VerticalAlignment="Center"></Label>
                 <controls:NumericUpDown TextAlignment="Left" Value="{Binding ByDay.Value,Mode=TwoWay}" Minimum="1" Maximum="364"></controls:NumericUpDown>
             </StackPanel>
             <StackPanel Orientation="Vertical">

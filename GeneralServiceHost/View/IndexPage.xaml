@@ -129,7 +129,7 @@
                                 <control:SimpleKeyValueControl KeyText="程序集名称"
                                                            ValueText="{Binding ScheduleInfo.AsmName}"></control:SimpleKeyValueControl>
                                 <control:SimpleKeyValueControl KeyText="执行类型"
-                                                           ValueText="{Binding ScheduleInfo.IsGeneralJob ,Converter={StaticResource Bool2StringConverter},ConverterParameter=周期运行|延时运行}"></control:SimpleKeyValueControl>
+                                                           ValueText="{Binding ScheduleInfo.Mode ,Converter={StaticResource ScheduleMode2StringConverter},ConverterParameter=周期运行|延时运行|}"></control:SimpleKeyValueControl>
                                 <control:SimpleKeyValueControl KeyText="是否立即"
                                                            ValueText="{Binding ScheduleInfo.IsToRunNow,Converter={StaticResource Bool2StringConverter}}"></control:SimpleKeyValueControl>
                                 <control:SimpleKeyValueControl KeyText="时间单位"

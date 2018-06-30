@@ -40,11 +40,19 @@ namespace GeneralServiceHost.View
 
         private void FrameworkElement_OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            var cuurentJob = ((JobInfo) e.NewValue);
+            var cuurentJob = ((JobInfo)e.NewValue);
             if (cuurentJob != null)
             {
                 var current = cuurentJob.ScheduleInfo.Type.ToString() + "BoardTemplate";
-                this.ScheduleBoard.Template = FindResource(current) as ControlTemplate;
+                try
+                {
+                    this.ScheduleBoard.Template = FindResource(current) as ControlTemplate;
+
+                }
+                catch (Exception exception)
+                {
+                    this.ScheduleBoard.Template = null;
+                }
 
             }
 

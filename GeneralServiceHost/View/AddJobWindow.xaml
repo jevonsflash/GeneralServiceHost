@@ -12,7 +12,7 @@
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
         Title="添加任务"
-        Width="420"
+        Width="480"
         >
     <Grid>
         <Grid.RowDefinitions>
@@ -40,18 +40,28 @@
         <GroupBox Grid.Row="1"
                   Header="计划设置">
             <StackPanel>
-                <StackPanel>
+                <StackPanel Margin="0,5">
                     <Label Content="名称"></Label>
-                    <TextBox Text="{Binding ScheduleInfo.Name ,Mode=TwoWay}"></TextBox>
+                    <TextBox Text="{Binding ScheduleInfo.Name ,Mode=TwoWay}" controls:TextBoxHelper.Watermark="程序集选择完成后显示" controls:TextBoxHelper.ClearTextButton="True"></TextBox>
                 </StackPanel>
-                <StackPanel Orientation="Horizontal">
+                <Grid Margin="0,5">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
                     <RadioButton Content="周期任务"
-                                 GroupName="1"
-                                 IsChecked="{Binding ScheduleInfo.IsGeneralJob,Mode=TwoWay}" />
-                    <RadioButton Content="延时任务"
-                                 GroupName="1" />
-                </StackPanel>
-                <StackPanel>
+                                 IsChecked="{Binding ScheduleInfo.Mode,Mode=TwoWay ,Converter={StaticResource ScheduleMode2BoolConverter},ConverterParameter=周期任务}" />
+                    <RadioButton Content="延时任务" Grid.Column="1"
+                                 IsChecked="{Binding ScheduleInfo.Mode,Mode=TwoWay ,Converter={StaticResource ScheduleMode2BoolConverter},ConverterParameter=延时任务}" />
+                    <RadioButton Content="不间断任务" 
+                                 Grid.Column="2"
+                                 x:Name="IsContinuallyButton" 
+                                 Command="{Binding ContinuallyModeSelectedCommand}"
+                                 IsChecked="{Binding ScheduleInfo.Mode,Mode=TwoWay ,Converter={StaticResource ScheduleMode2BoolConverter},ConverterParameter=不间断任务}" />
+                </Grid>
+                <StackPanel Margin="0,5" 
+                            controls:VisibilityHelper.IsCollapsed="{ Binding ElementName=IsContinuallyButton, Path=IsChecked}">
                     <Label Content="时间单位"></Label>
                     <ComboBox ItemsSource="{Binding Source={StaticResource ScheduleTypeDataSource}}"
                               SelectionChanged="ComboBox_Selected"
@@ -63,13 +73,14 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
                 </StackPanel>
-                <Control Name="CC"></Control>
+                <Control Name="CC"  Margin="0,5" 
+                         controls:VisibilityHelper.IsCollapsed="{Binding ElementName=IsContinuallyButton, Path=IsChecked}"></Control>
 
-                <StackPanel >
+                <StackPanel  Margin="0,5" IsEnabled="{Binding ElementName=IsContinuallyButton, Path=IsChecked, Converter={StaticResource True2FalseConverter}}">
                     <CheckBox Content="是否立即运行"
                               IsChecked="{Binding ScheduleInfo.IsToRunNow ,Mode=TwoWay}"></CheckBox>
                 </StackPanel>
-                <StackPanel>
+                <StackPanel Margin="0,5" IsEnabled="{Binding ElementName=IsContinuallyButton, Path=IsChecked, Converter={StaticResource True2FalseConverter}}">
                     <CheckBox Content="是否守护进程（失败后重启）"
                               IsChecked="{Binding ScheduleInfo.IsGuard ,Mode=TwoWay}"></CheckBox>
                 </StackPanel>

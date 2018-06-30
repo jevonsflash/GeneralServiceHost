@@ -12,7 +12,7 @@ namespace GeneralServiceHost.Model
 
         public ScheduleInfo()
         {
-            this.IsGeneralJob = true;
+            this.Mode = ScheduleMode.周期任务;
             this.IsGuard = false;
             this.ByMinute = new ByMinuteInfo();
             this.ByHour = new ByHourInfo();
@@ -148,20 +148,20 @@ namespace GeneralServiceHost.Model
             }
         }
 
-        private bool _isGeneralJob;
-        public bool IsGeneralJob
-        {
-            get
-            {
-                return _isGeneralJob;
+        private ScheduleMode _mode;
 
-            }
+        public ScheduleMode Mode
+        {
+            get { return _mode; }
             set
             {
-                _isGeneralJob = value;
-                RaisePropertyChanged(nameof(IsGeneralJob));
+                _mode = value;
+                RaisePropertyChanged();
+
+
             }
         }
+
 
         private bool _isGuard;
         public bool IsGuard

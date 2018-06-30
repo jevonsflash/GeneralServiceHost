@@ -10,8 +10,7 @@ using GeneralServiceHost.Model;
 namespace GeneralServiceHost.Converter
 {
 
-
-    public class JobStatus2StringConverter : IValueConverter
+    public class ScheduleMode2StringConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -24,37 +23,29 @@ namespace GeneralServiceHost.Converter
             }
             if (parameter == null)
             {
-                strings = "过期|挂起|正在执行|正在执行|暂停|未指定|未指定";
+                strings = "NaN|NaN|NaN";
             }
             else
             {
                 strings = parameter as string;
             }
             strList = strings.Split('|');
-            var currentStatus = (JobStatusType)value;
+            var currentStatus = (ScheduleMode)value;
 
             switch (currentStatus)
             {
-                case JobStatusType.Obsolete:
+                case ScheduleMode.周期任务:
                     result = strList[0];
                     break;
-                case JobStatusType.Pending:
+                case ScheduleMode.延时任务:
                     result = strList[1];
                     break;
-                case JobStatusType.Rerunning:
+                case ScheduleMode.不间断任务:
                     result = strList[2];
                     break;
-                case JobStatusType.Running:
-                    result = strList[3];
-                    break;
-                case JobStatusType.Stop:
-                    result = strList[4];
-                    break;
-                case JobStatusType.Unspecified:
-                    result = strList[5];
-                    break;
+          
                 default:
-                    result = strList[6];
+                    result = strList[0];
                     break;
             }
 

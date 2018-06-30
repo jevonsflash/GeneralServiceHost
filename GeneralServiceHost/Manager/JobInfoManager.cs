@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using GalaSoft.MvvmLight.Messaging;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 
@@ -105,8 +106,10 @@ namespace GeneralServiceHost.Manager
                     var isCreateJobSuccess = JobInfoManager.CreateJob(currentJobInfo.ScheduleInfo);
                     if (isCreateJobSuccess)
                     {
-                        MessageBox.Show("任务启用成功");
+                        //MessageBox.Show("任务启用成功");
                         JobInfoManager.Refresh();
+                        Messenger.Default.Send<string>("", MessengerToken.CLOSEWINDOW);
+
 
 
                     }
@@ -199,7 +202,7 @@ namespace GeneralServiceHost.Manager
                 return false;
             }
 
-            if (ScheduleInfo.IsGeneralJob)
+            if (ScheduleInfo.Mode == ScheduleMode.周期任务)
             {
                 ProcessResult result;
                 _generalServiceRegistry.SetAndRegistryGeneralService(ScheduleInfo, (sch) =>
@@ -219,7 +222,7 @@ namespace GeneralServiceHost.Manager
                 });
 
             }
-            else
+            else if (ScheduleInfo.Mode == ScheduleMode.延时任务)
             {
                 _generalServiceRegistry.SetAndRegistryDelayService(ScheduleInfo, (sch) =>
                 {
@@ -241,6 +244,28 @@ namespace GeneralServiceHost.Manager
 
             }
 
+            else if (ScheduleInfo.Mode == ScheduleMode.不间断任务)
+            {
+
+                _generalServiceRegistry.SetAndRegistryInstanceService(ScheduleInfo, (sch) =>
+                {
+                    ProcessResult result;
+                    if (ScheduleInfo.IsGuard)
+                    {
+                        var processMgr = new ProcessManager(sch);
+                        result = processMgr.RunProcess(OutputAction, ErrorAction, ContinueAction);
+                    }
+                    else
+                    {
+                        var processMgr = new ProcessManager(sch);
+                        result = processMgr.RunProcess(OutputAction);
+                    }
+
+                    FinishJob(result);
+
+                });
+            }
+
             JobManager.Initialize(_generalServiceRegistry);
             return true;
         }
@@ -252,6 +277,11 @@ namespace GeneralServiceHost.Manager
         private static void FinishJob(ProcessResult result)
         {
             var currentJob = DataManager.Current.JobInfos.FirstOrDefault(c => c.Name == result.Name);
+            if (currentJob == null)
+            {
+                return;
+            }
+
             currentJob.LastRun = result.Starttime;
 
             switch (result.Status)
@@ -328,6 +358,19 @@ namespace GeneralServiceHost.Manager
         }
 
         /// <summary>
+        /// 运行程序异常
+        /// </summary>
+        /// <param name="sender"></param>
+        private static void ContinueAction(object sender)
+        {
+            var sch = sender as ScheduleInfo;
+            var processMgr = new ProcessManager(sch);
+            var result = processMgr.RunProcess(OutputAction, ContinueAction);
+            FinishJob(result);
+        }
+
+
+        /// <summary>
         /// 程序输出
         /// </summary>
         /// <param name="sender"></param>
@@ -341,7 +384,7 @@ namespace GeneralServiceHost.Manager
             var value = string.Format("[{0}]{1}", createTime.ToString("yyyy-MM-dd hh:mm:ss"), content);
             App.Current.Dispatcher.Invoke((Action)delegate
             {
-                log.Add(value);
+                log?.Add(value);
             });
             var fileName = name + ".log";
             OutputManager.AppendOutput(fileName, value + "\n");
