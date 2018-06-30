@@ -5,6 +5,16 @@
 这是独立开发者的一个开源项目, 希望得到您的意见反馈，请将Bugs汇报至我的邮箱
 
  ![avatar](https://raw.githubusercontent.com/jevonsflash/GeneralServiceHost/master/GSH/screenshot.png)
+ 
+## 更新内容：
+
+
+Date | Version | Content
+:----------: | :-----------: | :-----------
+V1.1         | 2018-1-22        | 修复统计信息不准确的bug
+V2.0         | 2018-6-30        | 添加 不间断运行 执行计划；修复添加失败后主页闪退bug；小幅更改UI使得操作更人性化
+
+
 ## 特点：
 
 * 指定一个可执行文件作为任务
