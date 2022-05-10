@@ -9,10 +9,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
-using GalaSoft.MvvmLight.Messaging;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
-
+using CommunityToolkit.Mvvm.Messaging;
 
 namespace GeneralServiceHost.Manager
 {
@@ -108,7 +107,7 @@ namespace GeneralServiceHost.Manager
                     {
                         //MessageBox.Show("任务启用成功");
                         JobInfoManager.Refresh();
-                        Messenger.Default.Send<string>("", MessengerToken.CLOSEWINDOW);
+                        WeakReferenceMessenger.Default.Send(MessengerToken.CLOSEPROGRESS);
 
 
 

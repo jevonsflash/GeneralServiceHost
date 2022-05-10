@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GalaSoft.MvvmLight;
+
 
 namespace GeneralServiceHost.Model
 {
@@ -31,7 +31,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _name = value;
-                RaisePropertyChanged(nameof(Name));
+                OnPropertyChanged(nameof(Name));
             }
         }
 
@@ -42,7 +42,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _isToRunNow = value;
-                RaisePropertyChanged(nameof(IsToRunNow));
+                OnPropertyChanged(nameof(IsToRunNow));
             }
         }
 
@@ -54,7 +54,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _type = value;
-                RaisePropertyChanged(nameof(Type));
+                OnPropertyChanged(nameof(Type));
             }
         }
 
@@ -66,7 +66,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _byMonth = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -78,7 +78,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _byWeek = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
 
             }
         }
@@ -91,7 +91,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _byDay = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -104,7 +104,7 @@ namespace GeneralServiceHost.Model
             {
                 _byHour = value;
 
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -116,7 +116,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _byMinute = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
 
             }
         }
@@ -129,7 +129,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _bySpecified = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
 
             }
         }
@@ -144,7 +144,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _delayFor = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -156,7 +156,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _mode = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
 
 
             }
@@ -174,7 +174,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _isGuard = value;
-                RaisePropertyChanged(nameof(IsGuard));
+                OnPropertyChanged(nameof(IsGuard));
             }
         }
 
@@ -186,7 +186,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _asmPath = value;
-                RaisePropertyChanged(nameof(AsmPath));
+                OnPropertyChanged(nameof(AsmPath));
             }
         }
         private string _asmName;
@@ -196,7 +196,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _asmName = value;
-                RaisePropertyChanged(nameof(AsmName));
+                OnPropertyChanged(nameof(AsmName));
             }
         }
 

@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using FluentScheduler;
-using GalaSoft.MvvmLight;
+
 using Newtonsoft.Json;
 
 namespace GeneralServiceHost.Model
@@ -28,7 +28,7 @@ namespace GeneralServiceHost.Model
             get { return _status; }
             set {
                 _status = value;
-                RaisePropertyChanged(nameof(Status));
+                OnPropertyChanged(nameof(Status));
             }
         }
 
@@ -45,7 +45,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _name = value;
-                RaisePropertyChanged(nameof(Name));
+                OnPropertyChanged(nameof(Name));
             }
         }
 
@@ -60,7 +60,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _lastRun = value;
-                RaisePropertyChanged(nameof(LastRun));
+                OnPropertyChanged(nameof(LastRun));
             }
         }
 
@@ -75,7 +75,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _nextRun = value;
-                RaisePropertyChanged(nameof(NextRun));
+                OnPropertyChanged(nameof(NextRun));
             }
         }
 
@@ -86,7 +86,7 @@ namespace GeneralServiceHost.Model
             get { return _runCount; }
             set {
                 _runCount = value;
-                RaisePropertyChanged(nameof(RunCount));
+                OnPropertyChanged(nameof(RunCount));
             }
         }
 
@@ -98,7 +98,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _successCount = value;
-                RaisePropertyChanged(nameof(SucessCount));
+                OnPropertyChanged(nameof(SucessCount));
             }
         }
 
@@ -110,7 +110,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _errorCount = value;
-                RaisePropertyChanged(nameof(ErrorCount));
+                OnPropertyChanged(nameof(ErrorCount));
             }
         }
 
@@ -127,7 +127,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _sbLog = value;
-                RaisePropertyChanged(nameof(SbLog));
+                OnPropertyChanged(nameof(SbLog));
             }
         }
 
@@ -138,7 +138,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _scheduleInfo = value;
-                RaisePropertyChanged(nameof(ScheduleInfo));
+                OnPropertyChanged(nameof(ScheduleInfo));
             }
         }      
 

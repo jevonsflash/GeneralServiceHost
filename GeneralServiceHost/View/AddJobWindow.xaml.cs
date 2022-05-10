@@ -11,7 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using GalaSoft.MvvmLight.Messaging;
+using CommunityToolkit.Mvvm.Messaging;
 using GeneralServiceHost.Common;
 using GeneralServiceHost.ViewModel;
 using MahApps.Metro.Controls;
@@ -26,19 +26,20 @@ namespace GeneralServiceHost.View
         public AddJobWindow()
         {
             InitializeComponent();
-            Messenger.Default.Register<String>(this, MessengerToken.CLOSEWINDOW, HandleMessage);
+            WeakReferenceMessenger.Default.Register<string>(MessengerToken.CLOSEWINDOW, HandleMessage);
+
 
             Closed += AddJobWindow_Closed;
         }
 
-        private void HandleMessage(string obj)
+        private void HandleMessage(object recipient, string obj)
         {
             this.Close();
         }
 
         private void AddJobWindow_Closed(object sender, EventArgs e)
         {
-            ViewModelLocator.Cleanup();
+            ViewModelLocator.Cleanup<AddJobWindowViewModel>();
         }
 
         private void ComboBox_Selected(object sender, SelectionChangedEventArgs e)

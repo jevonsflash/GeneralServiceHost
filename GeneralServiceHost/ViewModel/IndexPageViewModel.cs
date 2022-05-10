@@ -9,9 +9,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using FluentScheduler;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
 using GeneralServiceHost.Common;
 using GeneralServiceHost.Helper;
 using GeneralServiceHost.Manager;
@@ -106,7 +106,7 @@ namespace GeneralServiceHost.ViewModel
             set
             {
                 _selectedJobInfo = value;
-                RaisePropertyChanged(nameof(SelectedJobInfo));
+                OnPropertyChanged(nameof(SelectedJobInfo));
             }
         }
 

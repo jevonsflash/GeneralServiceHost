@@ -1,6 +1,5 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:local="clr-namespace:GeneralServiceHost.Style"
                     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                     d1p1:Ignorable="d"
                     xmlns:d1p1="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -130,7 +129,7 @@
             </StackPanel>
             <StackPanel Orientation="Vertical">
                 <Label Content="在" VerticalAlignment="Center"></Label>
-                <controls:TimePicker SelectedTime="{Binding ByMonth.Time,Mode=TwoWay}"></controls:TimePicker>
+                <controls:TimePicker SelectedDateTime ="{Binding ByMonth.Time,Mode=TwoWay}"></controls:TimePicker>
 
             </StackPanel>
 
@@ -157,7 +156,7 @@
             </StackPanel>
             <StackPanel Orientation="Vertical">
                 <Label Content="在" VerticalAlignment="Center"></Label>
-                <controls:TimePicker SelectedTime="{Binding ByWeek.Time,Mode=TwoWay}"></controls:TimePicker>
+                <controls:TimePicker SelectedDateTime="{Binding ByWeek.Time,Mode=TwoWay}"></controls:TimePicker>
 
             </StackPanel>
 
@@ -172,7 +171,7 @@
             </StackPanel>
             <StackPanel Orientation="Vertical">
                 <Label Content="在" VerticalAlignment="Center"></Label>
-                <controls:TimePicker SelectedTime="{Binding ByDay.Time,Mode=TwoWay}"></controls:TimePicker>
+                <controls:TimePicker SelectedDateTime="{Binding ByDay.Time,Mode=TwoWay}"></controls:TimePicker>
             </StackPanel>
         </StackPanel>
     </ControlTemplate>
@@ -181,7 +180,7 @@
             <Label Content="按计划时间执行"></Label>
             <StackPanel Orientation="Vertical">
                 <Label Content="在" VerticalAlignment="Center"></Label>
-                <controls:DateTimePicker SelectedDate="{Binding BySpecified.Time,Mode=TwoWay}"></controls:DateTimePicker>
+                <controls:DateTimePicker SelectedDateTime="{Binding BySpecified.Time,Mode=TwoWay}"></controls:DateTimePicker>
             </StackPanel>
         </StackPanel>
     </ControlTemplate>

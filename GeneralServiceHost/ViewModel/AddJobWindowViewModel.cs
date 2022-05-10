@@ -2,9 +2,10 @@
 using System.ComponentModel;
 using System.Reflection;
 using System.Windows;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Command;
-using GalaSoft.MvvmLight.Messaging;
+
+using CommunityToolkit.Mvvm.Input;
+
+using CommunityToolkit.Mvvm.Messaging;
 using GeneralServiceHost.Common;
 using GeneralServiceHost.Manager;
 using GeneralServiceHost.Model;
@@ -83,7 +84,7 @@ namespace GeneralServiceHost.ViewModel
                     if (isCreateJobSuccess)
                     {
                         //MessageBox.Show("任务启用成功");
-                        Messenger.Default.Send<string>("", MessengerToken.CLOSEWINDOW);
+                        WeakReferenceMessenger.Default.Send(MessengerToken.CLOSEWINDOW);
 
 
                     }
@@ -116,7 +117,7 @@ namespace GeneralServiceHost.ViewModel
             set
             {
                 _asm = value;
-                RaisePropertyChanged(nameof(Asm));
+                OnPropertyChanged(nameof(Asm));
             }
         }
 
@@ -137,7 +138,7 @@ namespace GeneralServiceHost.ViewModel
             set
             {
                 _scheduleInfo = value;
-                RaisePropertyChanged(nameof(ScheduleInfo));
+                OnPropertyChanged(nameof(ScheduleInfo));
 
             }
         }

@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using GalaSoft.MvvmLight;
 using GeneralServiceHost.Helper;
 using GeneralServiceHost.Model;
 using Newtonsoft.Json;
@@ -123,8 +122,8 @@ namespace GeneralServiceHost.Manager
             set
             {
                 _jobInfos = value;
-
-                base.RaisePropertyChanged();
+                
+                base.OnPropertyChanged();
             }
         }
 
@@ -141,7 +140,7 @@ namespace GeneralServiceHost.Manager
             {
                 _total = value;
 
-                base.RaisePropertyChanged();
+                base.OnPropertyChanged();
             }
         }
         private int _stop;
@@ -152,7 +151,7 @@ namespace GeneralServiceHost.Manager
             private set
             {
                 _stop = value;
-                base.RaisePropertyChanged();
+                base.OnPropertyChanged();
 
 
             }
@@ -166,7 +165,7 @@ namespace GeneralServiceHost.Manager
             private set
             {
                 _running = value;
-                base.RaisePropertyChanged();
+                base.OnPropertyChanged();
 
             }
         }
@@ -179,7 +178,7 @@ namespace GeneralServiceHost.Manager
             private set
             {
                 _pending = value;
-                base.RaisePropertyChanged();
+                base.OnPropertyChanged();
 
             }
         }
@@ -197,7 +196,7 @@ namespace GeneralServiceHost.Manager
             {
                 _obsolete = value;
 
-                base.RaisePropertyChanged();
+                base.OnPropertyChanged();
             }
         }
 
@@ -209,7 +208,7 @@ namespace GeneralServiceHost.Manager
             set
             {
                 _runningJob = value;
-                base.RaisePropertyChanged(nameof(RunningJob));
+                base.OnPropertyChanged(nameof(RunningJob));
 
             }
         }

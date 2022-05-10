@@ -297,7 +297,7 @@ namespace GeneralServiceHost.Common
         {
             var name = scheduleInfo.Name;
 
-            Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunNow().AndEvery(99).Years().OnTheLastDay().At(0,0);
+            Schedule(Job(scheduleInfo, action)).NonReentrant().WithName(name).ToRunNow().AndEvery(int.MaxValue).Months().OnTheLastDay().At(0,0);
         }
 
 

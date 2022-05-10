@@ -1,7 +1,6 @@
 using System.Runtime.CompilerServices;
-using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.Ioc;
-using Microsoft.Practices.ServiceLocation;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.DependencyInjection;
 
 namespace GeneralServiceHost.ViewModel
 {
@@ -9,23 +8,16 @@ namespace GeneralServiceHost.ViewModel
     {
         public ViewModelLocator()
         {
-            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
-
-            SimpleIoc.Default.Register<MainViewModel>();
-
-            SimpleIoc.Default.Register<IndexPageViewModel>();
-            SimpleIoc.Default.Register<AddJobWindowViewModel>();
         }
 
-        public MainViewModel Main => ServiceLocator.Current.GetInstance<MainViewModel>();
-        public IndexPageViewModel IndexPage => ServiceLocator.Current.GetInstance<IndexPageViewModel>();
-        public AddJobWindowViewModel AddJobWindow => ServiceLocator.Current.GetInstance<AddJobWindowViewModel>();
+        public IndexPageViewModel IndexPage => Ioc.Default.GetRequiredService<IndexPageViewModel>();
+        public AddJobWindowViewModel AddJobWindow => Ioc.Default.GetRequiredService<AddJobWindowViewModel>();
 
 
-        public static void Cleanup()
+
+        public static void Cleanup<T>() where T : ObservableObject
         {
-            SimpleIoc.Default.Unregister<AddJobWindowViewModel>();
-            SimpleIoc.Default.Register<AddJobWindowViewModel>();
+
         }
     }
 }

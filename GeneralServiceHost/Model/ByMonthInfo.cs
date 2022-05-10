@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +27,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _value = value;
-                RaisePropertyChanged(nameof(Value));
+                OnPropertyChanged(nameof(Value));
             }
         }
 
@@ -40,7 +40,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _isMonthByweek = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
 
             }
         }
@@ -52,7 +52,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _time = value;
-                RaisePropertyChanged(nameof(Time));
+                OnPropertyChanged(nameof(Time));
             }
         }
         public int Hour
@@ -72,7 +72,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _dayofweek = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 
@@ -85,7 +85,7 @@ namespace GeneralServiceHost.Model
             {
                 _weekOfMonth = value;
 
-                RaisePropertyChanged();
+                OnPropertyChanged();
 
             }
         }
@@ -99,7 +99,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _onDay = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 

@@ -1,4 +1,4 @@
-﻿using GalaSoft.MvvmLight;
+﻿
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,7 +23,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _value = value;
-                RaisePropertyChanged(nameof(Value));
+                OnPropertyChanged(nameof(Value));
             }
         }
 
@@ -35,7 +35,7 @@ namespace GeneralServiceHost.Model
             set
             {
                 _onMinute = value;
-                RaisePropertyChanged();
+                OnPropertyChanged();
             }
         }
 

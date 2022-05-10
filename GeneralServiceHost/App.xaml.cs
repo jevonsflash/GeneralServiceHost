@@ -7,12 +7,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using FluentScheduler;
-using GalaSoft.MvvmLight.Messaging;
-using GalaSoft.MvvmLight.Threading;
 using GeneralServiceHost.Common;
 using GeneralServiceHost.Helper;
 using GeneralServiceHost.Model;
+using GeneralServiceHost.ViewModel;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace GeneralServiceHost
 {
@@ -21,8 +22,20 @@ namespace GeneralServiceHost
     /// </summary>
     public partial class App : Application
     {
+        private bool _initialized;
         public App()
         {
+            if (!_initialized)
+            {
+                _initialized = true;
+                Ioc.Default.ConfigureServices(
+                    new ServiceCollection()
+                    //ViewModels
+                    .AddSingleton<IndexPageViewModel>()
+                    .AddSingleton<AddJobWindowViewModel>()
+                    .BuildServiceProvider());
+          
+
 
             var dir = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Jobs");
             var dir2 = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Output");
@@ -32,8 +45,8 @@ namespace GeneralServiceHost
             DirFileHelper.CreateDir(dir);
             DirFileHelper.CreateDir(dir2);
             DirFileHelper.CreateDir(dirLog);
-            
-            
+            }
+
         }
 
 
@@ -92,8 +105,6 @@ namespace GeneralServiceHost
             Current.DispatcherUnhandledException += App_OnDispatcherUnhandledException;
             AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
             LogHelper.LogFlag = true;
-            DispatcherHelper.Initialize();
-
         }
 
     }
