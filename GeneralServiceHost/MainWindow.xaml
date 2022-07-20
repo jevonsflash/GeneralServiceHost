@@ -9,7 +9,17 @@
         xmlns:local="clr-namespace:GeneralServiceHost"
         xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
         mc:Ignorable="d"
+        ShowIconOnTitleBar="True"
+        Icon="Assets\schedule.ico"
+                      Closed="MetroWindow_Closed"
+                     Closing="MetroWindow_Closing"
         Title="GSH">
+    <controls:MetroWindow.Resources>
+        <ContextMenu x:Key="TaskBarTrayContextMenu">
+            <MenuItem Name="About" Click="About_Click" Header="关于"></MenuItem>
+            <MenuItem Name="Exit" Click="Exit_Click"  Header="退出"></MenuItem>
+        </ContextMenu>
+    </controls:MetroWindow.Resources>
     <controls:MetroWindow.RightWindowCommands>
         <controls:WindowCommands>
             <Button Content="关于" Click="ButtonBase_OnClick"></Button>

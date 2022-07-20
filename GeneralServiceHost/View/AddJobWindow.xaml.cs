@@ -26,7 +26,7 @@ namespace GeneralServiceHost.View
         public AddJobWindow()
         {
             InitializeComponent();
-            WeakReferenceMessenger.Default.Register<string>(MessengerToken.CLOSEWINDOW, HandleMessage);
+            WeakReferenceMessenger.Default.Register<string, string>(this, MessengerToken.CLOSEWINDOW, HandleMessage);
 
 
             Closed += AddJobWindow_Closed;
