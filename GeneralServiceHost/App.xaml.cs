@@ -12,6 +12,7 @@ using FluentScheduler;
 using GeneralServiceHost.Common;
 using GeneralServiceHost.Helper;
 using GeneralServiceHost.Model;
+using GeneralServiceHost.View;
 using GeneralServiceHost.ViewModel;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -33,6 +34,7 @@ namespace GeneralServiceHost
                     //ViewModels
                     .AddSingleton<IndexPageViewModel>()
                     .AddSingleton<AddJobWindowViewModel>()
+                    .AddScoped<AddJobWindow>()
                     .BuildServiceProvider());
           
 

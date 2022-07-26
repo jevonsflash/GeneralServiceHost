@@ -15,6 +15,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using GeneralServiceHost.View;
 using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 
 namespace GeneralServiceHost
@@ -72,12 +73,23 @@ namespace GeneralServiceHost
             {
                 return;
             }
-            MessageBoxResult result = System.Windows.MessageBox.Show("是否退出GSH？否则最小化到任务栏，取消则返回。", "提示", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning, MessageBoxResult.No);
-            if (result == MessageBoxResult.Cancel)
+
+            var settings = new MetroDialogSettings()
+            {
+                AffirmativeButtonText = "退出程序",
+                NegativeButtonText = "最小化至托盘",
+                FirstAuxiliaryButtonText = "取消",
+                ColorScheme = this.MetroDialogOptions!.ColorScheme
+            };
+
+            MessageDialogResult result = this.ShowModalMessageExternal("提示", "是否退出GSH",
+                                                                       MessageDialogStyle.AffirmativeAndNegativeAndSingleAuxiliary, settings);
+
+            if (result == MessageDialogResult.FirstAuxiliary)
             {
                 e.Cancel = true;
             }
-            else if (result == MessageBoxResult.No)
+            else if (result == MessageDialogResult.Negative)
             {
                 e.Cancel = true;
                 this.ShowInTaskbar=false;

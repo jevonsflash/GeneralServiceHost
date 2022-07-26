@@ -14,9 +14,12 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CommunityToolkit.Mvvm.DependencyInjection;
 using FluentScheduler;
 using GeneralServiceHost.Manager;
 using GeneralServiceHost.Model;
+using GeneralServiceHost.ViewModel;
+using Microsoft.Extensions.DependencyInjection;
 using Schedule = FluentScheduler.Schedule;
 
 namespace GeneralServiceHost.View
@@ -34,8 +37,15 @@ namespace GeneralServiceHost.View
 
         private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
         {
-            var addJobWindow = new AddJobWindow();
-            addJobWindow.ShowDialog();
+            IServiceScopeFactory _serviceScopeFactory = Ioc.Default.GetRequiredService<IServiceScopeFactory>();
+            using (IServiceScope scope = _serviceScopeFactory.CreateScope())
+            {
+                var addJobWindow = scope.ServiceProvider.GetRequiredService<AddJobWindow>();
+                Ioc.Default.GetRequiredService<AddJobWindowViewModel>().Scope=scope;
+                addJobWindow.ShowDialog();
+            }
+
+
         }
 
         private void FrameworkElement_OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
